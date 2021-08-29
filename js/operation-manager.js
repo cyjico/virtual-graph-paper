@@ -67,6 +67,7 @@ class OperationManager {
     viewport.addEventListener('mouseup', (e) => {
       if (isMouseDown) {
         this.#history[this.#history.length - 1].mouseup(e);
+        this.#history[this.#history.length - 1].render();
         isMouseDown = false;
       }
     });
