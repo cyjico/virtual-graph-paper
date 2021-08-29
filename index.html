@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Virtual Graph Paper</title>
+    <link rel="icon" type="image/png" href="favicon.ico" />
 
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+  </head>
+  <body>
+    <span id="status-line__message">Click to start drawing line.</span>
+    <div id="status-line__coords">X: 0 Y: 0</div>
+    <aside id="toolbox">
+      <div class="button-set border--bottom">
+        <input type="button" value="Pencil" class="button--active-state">
+        <input type="button" value="Line">
+        <input type="button" value="Arrow">
+        <input type="button" value="Circle">
+        <input type="button" value="Rectangle">
+        <input type="button" value="Text">
+      </div>
+      <label>
+        <input type="checkbox" checked>
+        Snap to grid
+      </label>
+      <label>
+        <input id="snap--15deg"type="checkbox" disabled>
+        Snap to 15°
+      </label>
+    </aside>
+    <main id="viewport">
+      <canvas id="first-layer"></canvas>
+      <canvas id="second-layer"></canvas>
+    </main>
+    <aside id="right-panel">
+      <div id="color-picker" class="border--bottom">
+        <input id="foreground-color" type="color" value="#000000">
+        <input id="background-color" type="color" value="#ffffff">
+      </div>
+      <div id="stroke-picker" class="border--bottom">
+        <p>Stroke Width</p>
+        <input type="number" min="1" max="1000">
+      </div>
+      <div class="button-set">
+        <input type="button" value="Undo">
+        <input type="button" value="Redo">
+        <input type="button" value="Save">
+        <input type="button" value="Share">
+      </div>
+    </aside>
+
+    <script src="js/lib/FileSaver.min.js"></script>
+    <script src="js/app.js" type="module"></script>
+  </body>
+</html>
