@@ -1,4 +1,5 @@
 import CartesianGraph from './cartesian-graph.js';
+import OperationManager from './operation-manager.js';
 
 window.addEventListener('load', () => {
   // Setting up the toolbox.
@@ -19,6 +20,7 @@ window.addEventListener('load', () => {
   const viewport = document.getElementsByTagName('main')[0];
 
   const cartesianGraph = new CartesianGraph(viewport);
+  const operationManager = new OperationManager(viewport, cartesianGraph);
 
   cartesianGraph.offset.x -= 10;
   cartesianGraph.offset.y += 10;
