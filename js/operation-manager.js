@@ -41,33 +41,45 @@ class OperationManager {
     /** @type {CanvasRenderingContext2D} */
     this.context = canvas.getContext('2d');
 
-    let isMouseDown = false;
+    let isLeftMouseDown = false;
+    let isWheelMouseDown = false;
     this.relativeCursorPosition = { x: 0, y: 0 };
     viewport.addEventListener('mousedown', (e) => {
-      isMouseDown = true;
+      if (e.button == 0) {
+        isLeftMouseDown = true;
+        this.#history.push(new (getCurrentOperation())(this, cartesianGraph));
+        this.#history[this.#history.length - 1].mousedown(e);
+      }
 
-      this.#history.push(new (getCurrentOperation())(this, cartesianGraph));
-      this.#history[this.#history.length - 1].mousedown(e);
+      isWheelMouseDown = e.button == 1;
     });
 
     viewport.addEventListener('mousemove', (e) => {
       const rect = e.currentTarget.getBoundingClientRect();
-      this.relativeCursorPosition.x = cartesianGraph.scaleDownX(
-        e.clientX - rect.left
-      );
-      this.relativeCursorPosition.y = cartesianGraph.scaleDownY(
-        e.clientY - rect.top
-      );
+      const x = cartesianGraph.scaleDownX(e.clientX - rect.left);
+      const y = cartesianGraph.scaleDownY(e.clientY - rect.top);
 
-      if (isMouseDown) {
+      if (isWheelMouseDown) {
+        cartesianGraph.offset.x -= (this.relativeCursorPosition.x - x) * 0.95;
+        cartesianGraph.offset.y -= (this.relativeCursorPosition.y - y) * 0.95;
+        cartesianGraph.render();
+        this.render();
+      }
+
+      this.relativeCursorPosition.x = x;
+      this.relativeCursorPosition.y = y;
+
+      if (isLeftMouseDown) {
         this.#history[this.#history.length - 1].mousemove(e);
       }
     });
 
     viewport.addEventListener('mouseup', (e) => {
-      if (isMouseDown) {
+      if (isLeftMouseDown && e.button == 0) {
         this.#history[this.#history.length - 1].mouseup(e);
-        isMouseDown = false;
+        isLeftMouseDown = false;
+      } else if (isWheelMouseDown && e.button == 1) {
+        isWheelMouseDown = false;
       }
     });
   }
