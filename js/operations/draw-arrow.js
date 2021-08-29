@@ -54,6 +54,7 @@ class DrawArrow extends Operation {
     this.leftHook.y = Math.sin(headingRad + rad) + this.end.y;
     this.rightHook.x = Math.cos(headingRad - rad) + this.end.x;
     this.rightHook.y = Math.sin(headingRad - rad) + this.end.y;
+    this.render();
   }
 
   render() {

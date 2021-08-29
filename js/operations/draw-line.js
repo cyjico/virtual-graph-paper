@@ -35,6 +35,7 @@ class DrawLine extends Operation {
     super.mouseup.call(this);
     this.end.x = this.operationManager.relativeCursorPosition.x;
     this.end.y = this.operationManager.relativeCursorPosition.y;
+    this.render();
   }
 
   render() {
