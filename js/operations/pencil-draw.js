@@ -35,7 +35,7 @@ class PencilDraw extends Operation {
           this.vertices[this.vertices.length - 1][1],
         2
       );
-    if (dist > 0.65 * 0.65) {
+    if (dist > 0.25 * 0.25) {
       this.vertices.push([
         this.operationManager.relativeCursorPosition.x,
         this.operationManager.relativeCursorPosition.y,
