@@ -21,8 +21,5 @@ window.addEventListener('load', () => {
 
   const cartesianGraph = new CartesianGraph(viewport);
   const operationManager = new OperationManager(viewport, cartesianGraph);
-
-  cartesianGraph.offset.x -= 10;
-  cartesianGraph.offset.y += 10;
   cartesianGraph.render();
 });
