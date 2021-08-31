@@ -15,6 +15,8 @@ function getSelectedOperation() {
       return DrawLine;
     case 'Arrow':
       return DrawArrow;
+    case 'Arc':
+      break;
     case 'Circle':
       break;
     case 'Rectangle':
