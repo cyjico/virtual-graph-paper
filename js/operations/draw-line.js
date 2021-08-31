@@ -4,7 +4,7 @@ class DrawLine extends Operation {
   /**
    * Creates an instance of ArrowOperation.
    *
-   * @param {import('../operation-manager.js').default} operationManager
+   * @param {import('../operation-history.js').default} operationManager
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof ArrowOperation
    */
@@ -21,21 +21,32 @@ class DrawLine extends Operation {
     };
   }
 
-  mousedown() {
+  mousedown(e, input) {
     super.mousedown.call(this);
-    this.start.x = this.operationManager.relativeCursorPosition.x;
-    this.start.y = this.operationManager.relativeCursorPosition.y;
+    this.start.x = input.relativeCursorPosition.x;
+    this.start.y = input.relativeCursorPosition.y;
   }
 
-  mousemove() {
+  mousemove(e, input) {
     super.mousemove.call(this);
+    const context = this.operationManager.context;
+    this.operationManager.render();
+    context.beginPath();
+    context.moveTo(
+      this.cartesianGraph.scaleUpX(this.start.x),
+      this.cartesianGraph.scaleUpY(this.start.y)
+    );
+    context.lineTo(
+      this.cartesianGraph.scaleUpX(input.relativeCursorPosition.x),
+      this.cartesianGraph.scaleUpY(input.relativeCursorPosition.y)
+    );
+    context.stroke();
   }
 
-  mouseup() {
+  mouseup(e, input) {
     super.mouseup.call(this);
-    this.end.x = this.operationManager.relativeCursorPosition.x;
-    this.end.y = this.operationManager.relativeCursorPosition.y;
-    this.render();
+    this.end.x = input.relativeCursorPosition.x;
+    this.end.y = input.relativeCursorPosition.y;
   }
 
   render() {
@@ -44,11 +55,11 @@ class DrawLine extends Operation {
     context.beginPath();
     context.moveTo(
       this.cartesianGraph.scaleUpX(this.start.x),
-      this.cartesianGraph.scaleUpY(this.start.y, false)
+      this.cartesianGraph.scaleUpY(this.start.y)
     );
     context.lineTo(
       this.cartesianGraph.scaleUpX(this.end.x),
-      this.cartesianGraph.scaleUpY(this.end.y, false)
+      this.cartesianGraph.scaleUpY(this.end.y)
     );
     context.stroke();
   }

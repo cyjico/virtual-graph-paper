@@ -4,7 +4,7 @@ class DrawArrow extends Operation {
   /**
    * Creates an instance of ArrowOperation.
    *
-   * @param {import('../operation-manager.js').default} operationManager
+   * @param {import('../operation-history.js').default} operationManager
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof ArrowOperation
    */
@@ -19,30 +19,30 @@ class DrawArrow extends Operation {
       x: 0,
       y: 0,
     };
-    this.leftHook = {
+    this.left = {
       x: 0,
       y: 0,
     };
-    this.rightHook = {
+    this.right = {
       x: 0,
       y: 0,
     };
   }
 
-  mousedown() {
+  mousedown(e, input) {
     super.mousedown.call(this);
-    this.start.x = this.operationManager.relativeCursorPosition.x;
-    this.start.y = this.operationManager.relativeCursorPosition.y;
+    this.start.x = input.relativeCursorPosition.x;
+    this.start.y = input.relativeCursorPosition.y;
   }
 
   mousemove() {
     super.mousemove.call(this);
   }
 
-  mouseup() {
+  mouseup(e, input) {
     super.mouseup.call(this);
-    this.end.x = this.operationManager.relativeCursorPosition.x;
-    this.end.y = this.operationManager.relativeCursorPosition.y;
+    this.end.x = input.relativeCursorPosition.x;
+    this.end.y = input.relativeCursorPosition.y;
 
     const headingRad = Math.atan2(
       this.start.y - this.end.y,
@@ -50,10 +50,10 @@ class DrawArrow extends Operation {
     );
 
     const rad = 45 * (Math.PI / 180);
-    this.leftHook.x = Math.cos(headingRad + rad) + this.end.x;
-    this.leftHook.y = Math.sin(headingRad + rad) + this.end.y;
-    this.rightHook.x = Math.cos(headingRad - rad) + this.end.x;
-    this.rightHook.y = Math.sin(headingRad - rad) + this.end.y;
+    this.left.x = Math.cos(headingRad + rad) + this.end.x;
+    this.left.y = Math.sin(headingRad + rad) + this.end.y;
+    this.right.x = Math.cos(headingRad - rad) + this.end.x;
+    this.right.y = Math.sin(headingRad - rad) + this.end.y;
     this.render();
   }
 
@@ -70,16 +70,16 @@ class DrawArrow extends Operation {
       this.cartesianGraph.scaleUpY(this.end.y)
     );
     context.lineTo(
-      this.cartesianGraph.scaleUpX(this.leftHook.x),
-      this.cartesianGraph.scaleUpY(this.leftHook.y)
+      this.cartesianGraph.scaleUpX(this.left.x),
+      this.cartesianGraph.scaleUpY(this.left.y)
     );
     context.moveTo(
       this.cartesianGraph.scaleUpX(this.end.x),
       this.cartesianGraph.scaleUpY(this.end.y)
     );
     context.lineTo(
-      this.cartesianGraph.scaleUpX(this.rightHook.x),
-      this.cartesianGraph.scaleUpY(this.rightHook.y)
+      this.cartesianGraph.scaleUpX(this.right.x),
+      this.cartesianGraph.scaleUpY(this.right.y)
     );
     context.stroke();
   }

@@ -1,5 +1,28 @@
 import CartesianGraph from './cartesian-graph.js';
-import OperationManager from './operation-manager.js';
+import OperationHistory from './operation-history.js';
+import DrawArrow from './operations/draw-arrow.js';
+import DrawLine from './operations/draw-line.js';
+import PencilDraw from './operations/pencil-draw.js';
+
+function getSelectedOperation() {
+  switch (
+    document.querySelector('#toolbox div.button-set input.button--active-state')
+      .value
+  ) {
+    case 'Pencil':
+      return PencilDraw;
+    case 'Line':
+      return DrawLine;
+    case 'Arrow':
+      return DrawArrow;
+    case 'Circle':
+      break;
+    case 'Rectangle':
+      break;
+    case 'Text':
+      break;
+  }
+}
 
 window.addEventListener('load', () => {
   // Setting up the toolbox.
@@ -19,7 +42,83 @@ window.addEventListener('load', () => {
   // Setting up the viewport.
   const viewport = document.getElementsByTagName('main')[0];
 
+  const operationHistory = new OperationHistory(viewport);
   const cartesianGraph = new CartesianGraph(viewport);
-  const operationManager = new OperationManager(viewport, cartesianGraph);
+
+  /** @type {import('./operations/operation.js').default} */
+  let currentOperation = null;
+  const input = {
+    isLeftMouseDown: false,
+    isWheelMouseDown: false,
+    relativeCursorPosition: {
+      x: 0,
+      y: 0,
+    },
+  };
+
+  viewport.addEventListener('mousedown', (e) => {
+    input.isLeftMouseDown = (e.buttons & 1) != 0;
+    input.isWheelMouseDown = (e.buttons & 4) != 0;
+
+    if (input.isLeftMouseDown && !currentOperation) {
+      currentOperation = new (getSelectedOperation())(
+        operationHistory,
+        cartesianGraph
+      );
+      currentOperation.mousedown(e, input);
+    }
+  });
+
+  viewport.addEventListener('mousemove', (e) => {
+    const bounds = e.currentTarget.getBoundingClientRect();
+    const rx = cartesianGraph.scaleDownX(e.clientX - bounds.left);
+    const ry = cartesianGraph.scaleDownY(e.clientY - bounds.top);
+
+    if (input.isWheelMouseDown) {
+      cartesianGraph.offset.x -= (input.relativeCursorPosition.x - rx) * 0.95;
+      cartesianGraph.offset.y -= (input.relativeCursorPosition.y - ry) * 0.95;
+      operationHistory.render();
+      cartesianGraph.render();
+    }
+
+    input.relativeCursorPosition.x = rx;
+    input.relativeCursorPosition.y = ry;
+
+    if (input.isLeftMouseDown && currentOperation) {
+      currentOperation.mousemove(e, input);
+    }
+  });
+
+  document.addEventListener('mouseup', (e) => {
+    input.isLeftMouseDown = input.isLeftMouseDown && (e.buttons & 1) != 0;
+    input.isWheelMouseDown = input.isWheelMouseDown && (e.buttons & 4) != 0;
+
+    if (!input.isLeftMouseDown && currentOperation) {
+      currentOperation.mouseup(e, input);
+      operationHistory.addOperation(currentOperation);
+      currentOperation = null;
+    }
+  });
+
+  viewport.addEventListener(
+    'wheel',
+    (e) => {
+      cartesianGraph.scale = Math.min(
+        Math.max(
+          cartesianGraph.scale -
+            e.deltaY *
+              0.0025 *
+              (cartesianGraph.scale / cartesianGraph.baseScale),
+          4.5
+        ),
+        75.825
+      );
+
+      cartesianGraph.render();
+      operationHistory.render();
+    },
+    { passive: true }
+  );
+
   cartesianGraph.render();
 });

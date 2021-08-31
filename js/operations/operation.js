@@ -1,6 +1,6 @@
 class Operation {
   #active = true;
-  /** @type {import('../operation-manager.js').default} */
+  /** @type {import('../operation-history.js').default} */
   operationManager;
   /** @type {import('../cartesian-graph.js').default} */
   cartesianGraph;
@@ -8,7 +8,7 @@ class Operation {
   /**
    * Creates an instance of Operation.
    *
-   * @param {import('../operation-manager.js').default} operationManager
+   * @param {import('../operation-history.js').default} operationManager
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof Operation
    */
@@ -17,19 +17,19 @@ class Operation {
     this.cartesianGraph = cartesianGraph;
   }
 
-  mousedown(e) {
+  mousedown(e, input) {
     if (!this.#active) {
       throw new Error('Unable to update an inactive operation.');
     }
   }
 
-  mousemove(e) {
+  mousemove(e, input) {
     if (!this.#active) {
       throw new Error('Unable to update an inactive operation.');
     }
   }
 
-  mouseup(e) {
+  mouseup(e, input) {
     if (!this.#active) {
       throw new Error('Unable to update an inactive operation.');
     } else {
