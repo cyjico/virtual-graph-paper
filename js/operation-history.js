@@ -35,20 +35,20 @@ class OperationHistory {
   removeOperation(index) {
     this.#operations.splice(index, 1);
 
-    if (this.#travelIndex >= this.#operations.length) {
-      this.#travelIndex = this.#operations.length - 1;
+    if (this.#travelIndex > this.#operations.length) {
+      this.#travelIndex = this.#operations.length;
     }
   }
 
   redoOperation() {
-    this.#travelIndex = Math.min(this.#travelIndex - 1, 0);
+    this.#travelIndex = Math.max(this.#travelIndex - 1, 0);
     this.render();
   }
 
   undoOperation() {
-    this.#travelIndex = Math.max(
+    this.#travelIndex = Math.min(
       this.#travelIndex + 1,
-      this.#operations.length - 1
+      this.#operations.length
     );
     this.render();
   }
