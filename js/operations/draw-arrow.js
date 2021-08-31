@@ -44,16 +44,16 @@ class DrawArrow extends Operation {
     this.end.x = input.relativeCursorPosition.x;
     this.end.y = input.relativeCursorPosition.y;
 
-    const headingRad = Math.atan2(
+    const heading = Math.atan2(
       this.start.y - this.end.y,
       this.start.x - this.end.x
     );
 
     const rad = 45 * (Math.PI / 180);
-    this.left.x = Math.cos(headingRad + rad) + this.end.x;
-    this.left.y = Math.sin(headingRad + rad) + this.end.y;
-    this.right.x = Math.cos(headingRad - rad) + this.end.x;
-    this.right.y = Math.sin(headingRad - rad) + this.end.y;
+    this.left.x = Math.cos(heading + rad) + this.end.x;
+    this.left.y = Math.sin(heading + rad) + this.end.y;
+    this.right.x = Math.cos(heading - rad) + this.end.x;
+    this.right.y = Math.sin(heading - rad) + this.end.y;
     this.render();
   }
 
