@@ -135,7 +135,7 @@ window.addEventListener('load', () => {
         Math.max(
           cartesianGraph.scale -
             e.deltaY *
-              0.0025 *
+              0.0075 *
               (cartesianGraph.scale / cartesianGraph.baseScale),
           4.5
         ),
