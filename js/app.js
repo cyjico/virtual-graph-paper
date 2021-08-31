@@ -54,7 +54,35 @@ window.addEventListener('load', () => {
       x: 0,
       y: 0,
     },
+    keys: [],
   };
+
+  document.addEventListener('keydown', (e) => {
+    if (!input.keys.includes(e.code)) {
+      input.keys.push(e.code);
+    }
+
+    if (input.keys[0].includes('Control')) {
+      if (input.keys.length == 2 && input.keys[1] == 'KeyZ') {
+        operationHistory.undoOperation();
+      } else if (
+        input.keys.length == 3 &&
+        input.keys[1].includes('Shift') &&
+        input.keys[2] == 'KeyZ'
+      ) {
+        operationHistory.redoOperation();
+      }
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    for (let i = 0; i < input.keys.length; i++) {
+      if (input.keys[i] === e.code) {
+        input.keys.splice(i, 1);
+        break;
+      }
+    }
+  });
 
   viewport.addEventListener('mousedown', (e) => {
     input.isLeftMouseDown = (e.buttons & 1) != 0;
