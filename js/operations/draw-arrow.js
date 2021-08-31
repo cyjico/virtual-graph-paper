@@ -35,8 +35,46 @@ class DrawArrow extends Operation {
     this.start.y = input.relativeCursorPosition.y;
   }
 
-  mousemove() {
+  mousemove(e, input) {
     super.mousemove.call(this);
+    const context = this.operationManager.context;
+    this.operationManager.render();
+    context.beginPath();
+    context.moveTo(
+      this.cartesianGraph.scaleUpX(this.start.x),
+      this.cartesianGraph.scaleUpY(this.start.y)
+    );
+    context.lineTo(
+      this.cartesianGraph.scaleUpX(input.relativeCursorPosition.x),
+      this.cartesianGraph.scaleUpY(input.relativeCursorPosition.y)
+    );
+    const heading = Math.atan2(
+      this.start.y - input.relativeCursorPosition.y,
+      this.start.x - input.relativeCursorPosition.x
+    );
+
+    const rad = 45 * (Math.PI / 180);
+    context.lineTo(
+      this.cartesianGraph.scaleUpX(
+        Math.cos(heading + rad) + input.relativeCursorPosition.x
+      ),
+      this.cartesianGraph.scaleUpY(
+        Math.sin(heading + rad) + input.relativeCursorPosition.y
+      )
+    );
+    context.moveTo(
+      this.cartesianGraph.scaleUpX(input.relativeCursorPosition.x),
+      this.cartesianGraph.scaleUpY(input.relativeCursorPosition.y)
+    );
+    context.lineTo(
+      this.cartesianGraph.scaleUpX(
+        Math.cos(heading - rad) + input.relativeCursorPosition.x
+      ),
+      this.cartesianGraph.scaleUpY(
+        Math.sin(heading - rad) + input.relativeCursorPosition.y
+      )
+    );
+    context.stroke();
   }
 
   mouseup(e, input) {
@@ -54,7 +92,6 @@ class DrawArrow extends Operation {
     this.left.y = Math.sin(heading + rad) + this.end.y;
     this.right.x = Math.cos(heading - rad) + this.end.x;
     this.right.y = Math.sin(heading - rad) + this.end.y;
-    this.render();
   }
 
   render() {
