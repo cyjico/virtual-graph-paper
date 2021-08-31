@@ -12,11 +12,13 @@ class CartesianGraph {
 
     /** @type {CanvasRenderingContext2D} */
     this.context = canvas.getContext('2d');
+
     this.offset = {
       x: 0,
       y: 0,
     };
-    this.scale = Math.min(canvas.width, canvas.height) * 0.025;
+    this.baseScale = Math.min(canvas.width, canvas.height) * 0.025;
+    this.scale = this.baseScale;
   }
 
   /**
@@ -30,7 +32,7 @@ class CartesianGraph {
    */
   #drawVerticalLine(canvas, centerX, centerY, x) {
     const globalIndex = Math.round((x - centerX) / this.scale);
-    if (globalIndex % 5 == 0) {
+    if (globalIndex % Math.ceil((this.baseScale / this.scale) * 5) == 0) {
       this.context.fillText(globalIndex, x + 3, centerY - 3);
       this.context.strokeStyle = 'hsl(0, 0%, 0%, 60%)';
     } else {
@@ -53,7 +55,7 @@ class CartesianGraph {
    */
   #drawHorizontalLine(canvas, centerX, centerY, y) {
     const globalIndex = Math.round((centerY - y) / this.scale);
-    if (globalIndex % 5 == 0) {
+    if (globalIndex % Math.ceil((this.baseScale / this.scale) * 5) == 0) {
       this.context.fillText(globalIndex, centerX + 3, y - 3);
       this.context.strokeStyle = 'hsl(0, 0%, 0%, 60%)';
     } else {
