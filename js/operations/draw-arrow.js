@@ -27,10 +27,13 @@ class DrawArrow extends Operation {
       x: 0,
       y: 0,
     };
+    this.strokeWidth = 0;
   }
 
-  mousedown({ input }) {
+  mousedown({ input, env }) {
     super.mousedown.call(this);
+
+    this.strokeWidth = env.getStrokeWidth();
     this.start.x = input.relativeCursorPosition.x;
     this.start.y = input.relativeCursorPosition.y;
   }
@@ -71,11 +74,11 @@ class DrawArrow extends Operation {
     const rad = 45 * (Math.PI / 180);
     headingRad += Math.PI;
 
-    context.lineTo(
+    context.moveTo(
       this.cartesianGraph.scaleUpX(Math.cos(headingRad + rad) + rx),
       this.cartesianGraph.scaleUpY(Math.sin(headingRad + rad) + ry)
     );
-    context.moveTo(
+    context.lineTo(
       this.cartesianGraph.scaleUpX(rx),
       this.cartesianGraph.scaleUpY(ry)
     );
@@ -83,6 +86,7 @@ class DrawArrow extends Operation {
       this.cartesianGraph.scaleUpX(Math.cos(headingRad - rad) + rx),
       this.cartesianGraph.scaleUpY(Math.sin(headingRad - rad) + ry)
     );
+    context.lineWidth = this.strokeWidth;
     context.stroke();
   }
 
@@ -117,27 +121,25 @@ class DrawArrow extends Operation {
   render() {
     super.render.call(this);
     const context = this.operationManager.context;
+    const ex = this.cartesianGraph.scaleUpX(this.end.x);
+    const ey = this.cartesianGraph.scaleUpY(this.end.y);
+
     context.beginPath();
     context.moveTo(
       this.cartesianGraph.scaleUpX(this.start.x),
       this.cartesianGraph.scaleUpY(this.start.y)
     );
-    context.lineTo(
-      this.cartesianGraph.scaleUpX(this.end.x),
-      this.cartesianGraph.scaleUpY(this.end.y)
-    );
-    context.lineTo(
+    context.lineTo(ex, ey);
+    context.moveTo(
       this.cartesianGraph.scaleUpX(this.left.x),
       this.cartesianGraph.scaleUpY(this.left.y)
     );
-    context.moveTo(
-      this.cartesianGraph.scaleUpX(this.end.x),
-      this.cartesianGraph.scaleUpY(this.end.y)
-    );
+    context.lineTo(ex, ey);
     context.lineTo(
       this.cartesianGraph.scaleUpX(this.right.x),
       this.cartesianGraph.scaleUpY(this.right.y)
     );
+    context.lineWidth = this.strokeWidth;
     context.stroke();
   }
 }

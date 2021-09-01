@@ -19,10 +19,13 @@ class DrawLine extends Operation {
       x: 0,
       y: 0,
     };
+    this.strokeWidth = 0;
   }
 
-  mousedown({ input }) {
+  mousedown({ input, env }) {
     super.mousedown.call(this);
+
+    this.strokeWidth = env.getStrokeWidth();
     this.start.x = input.relativeCursorPosition.x;
     this.start.y = input.relativeCursorPosition.y;
   }
@@ -58,6 +61,7 @@ class DrawLine extends Operation {
         this.cartesianGraph.scaleUpY(input.relativeCursorPosition.y)
       );
     }
+    context.lineWidth = this.strokeWidth;
     context.stroke();
   }
 
@@ -91,6 +95,7 @@ class DrawLine extends Operation {
       this.cartesianGraph.scaleUpX(this.end.x),
       this.cartesianGraph.scaleUpY(this.end.y)
     );
+    context.lineWidth = this.strokeWidth;
     context.stroke();
   }
 }
