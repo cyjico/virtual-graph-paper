@@ -31,6 +31,11 @@ window.addEventListener('load', () => {
   const operationHistory = new OperationHistory(viewport);
   const cartesianGraph = new CartesianGraph(viewport);
 
+  /** @type {HTMLInputElement} */
+  const gridSnapping = document.querySelector('#snap--grid');
+  /** @type {HTMLInputElement} */
+  const degreeSnapping = document.querySelector('#snap--deg');
+
   {
     // Setting up the toolbox.
     const buttons = document.querySelectorAll(
@@ -62,6 +67,7 @@ window.addEventListener('load', () => {
   {
     /** @type {import('./operations/operation.js').default} */
     let currentOperation = null;
+
     const input = {
       isLeftMouseDown: false,
       isWheelMouseDown: false,
@@ -124,8 +130,13 @@ window.addEventListener('load', () => {
         cartesianGraph.render();
       }
 
-      input.relativeCursorPosition.x = rx;
-      input.relativeCursorPosition.y = ry;
+      if (gridSnapping.checked) {
+        input.relativeCursorPosition.x = Math.round(rx);
+        input.relativeCursorPosition.y = Math.round(ry);
+      } else {
+        input.relativeCursorPosition.x = rx;
+        input.relativeCursorPosition.y = ry;
+      }
 
       if (input.isLeftMouseDown && currentOperation) {
         currentOperation.mousemove(e, input);
