@@ -17,7 +17,7 @@ function getSelectedOperation() {
       return DrawArrow;
     case 'Arc':
       break;
-    case 'Circle':
+    case 'Arc (w/ text)':
       break;
     case 'Rectangle':
       break;
