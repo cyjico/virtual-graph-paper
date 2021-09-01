@@ -20,7 +20,7 @@ function getSelectedOperation() {
     case 'Arc':
       return DrawArc;
     case 'Arc (w/ text)':
-      break;
+      return DrawArcText;
     case 'Rectangle':
       break;
     case 'Text':
