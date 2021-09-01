@@ -1,5 +1,4 @@
 class Operation {
-  #active = true;
   /** @type {import('../operation-history.js').default} */
   operationManager;
   /** @type {import('../cartesian-graph.js').default} */
@@ -17,31 +16,13 @@ class Operation {
     this.cartesianGraph = cartesianGraph;
   }
 
-  mousedown() {
-    if (!this.#active) {
-      throw new Error('Unable to update an inactive operation.');
-    }
-  }
+  mousedown() {}
 
-  mousemove() {
-    if (!this.#active) {
-      throw new Error('Unable to update an inactive operation.');
-    }
-  }
+  mousemove() {}
 
-  mouseup() {
-    if (!this.#active) {
-      throw new Error('Unable to update an inactive operation.');
-    } else {
-      this.#active = false;
-    }
-  }
+  mouseup() {}
 
-  render() {
-    if (this.#active) {
-      throw new Error('Unable to render an active operation.');
-    }
-  }
+  render() {}
 }
 
 export default Operation;
