@@ -11,11 +11,14 @@ class PencilDraw extends Operation {
   constructor(operationManager, cartesianGraph) {
     super(operationManager, cartesianGraph);
 
+    this.strokeWidth = 0;
     this.vertices = [];
   }
 
-  mousedown({ input }) {
+  mousedown({ input, env }) {
     super.mousedown.call(this);
+
+    this.strokeWidth = env.getStrokeWidth();
     this.vertices.push([
       input.relativeCursorPosition.x,
       input.relativeCursorPosition.y,
@@ -24,6 +27,7 @@ class PencilDraw extends Operation {
 
   mousemove({ input }) {
     super.mousemove.call(this);
+
     const dist =
       Math.pow(
         input.relativeCursorPosition.x -
@@ -36,44 +40,27 @@ class PencilDraw extends Operation {
         2
       );
     if (dist > 0.25 * 0.25) {
-      const context = this.operationManager.context;
-      context.beginPath();
-
-      if (input.isWheelMouseDown) {
-        context.moveTo(
-          this.cartesianGraph.scaleUpX(this.vertices[0][0]),
-          this.cartesianGraph.scaleUpY(this.vertices[0][1])
-        );
-        for (let i = 1; i < this.vertices.length; i++) {
-          context.lineTo(
-            this.cartesianGraph.scaleUpX(this.vertices[i][0]),
-            this.cartesianGraph.scaleUpY(this.vertices[i][1])
-          );
-        }
-      } else {
+      if (!input.isWheelMouseDown) {
         this.vertices.push([
           input.relativeCursorPosition.x,
           input.relativeCursorPosition.y,
         ]);
-
-        context.moveTo(
-          this.cartesianGraph.scaleUpX(
-            this.vertices[this.vertices.length - 2][0]
-          ),
-          this.cartesianGraph.scaleUpY(
-            this.vertices[this.vertices.length - 2][1]
-          )
-        );
-        context.lineTo(
-          this.cartesianGraph.scaleUpX(
-            this.vertices[this.vertices.length - 1][0]
-          ),
-          this.cartesianGraph.scaleUpY(
-            this.vertices[this.vertices.length - 1][1]
-          )
-        );
       }
 
+      this.operationManager.render();
+      const context = this.operationManager.context;
+      context.beginPath();
+      context.moveTo(
+        this.cartesianGraph.scaleUpX(this.vertices[0][0]),
+        this.cartesianGraph.scaleUpY(this.vertices[0][1])
+      );
+      for (let i = 1; i < this.vertices.length; i++) {
+        context.lineTo(
+          this.cartesianGraph.scaleUpX(this.vertices[i][0]),
+          this.cartesianGraph.scaleUpY(this.vertices[i][1])
+        );
+      }
+      context.lineWidth = this.strokeWidth;
       context.stroke();
     }
   }
@@ -97,6 +84,7 @@ class PencilDraw extends Operation {
           this.cartesianGraph.scaleUpY(this.vertices[i][1])
         );
       }
+      context.lineWidth = this.strokeWidth;
       context.stroke();
     }
   }
