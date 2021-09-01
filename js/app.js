@@ -75,6 +75,8 @@ window.addEventListener('load', () => {
     const env = {
       isDegreeSnapping: () => document.getElementById('snap--deg').checked,
       isGridSnapping: () => document.getElementById('snap--grid').checked,
+      getStrokeWidth: () =>
+        parseFloat(document.getElementById('stroke-picker').children[1].value),
     };
 
     document.addEventListener('keydown', (e) => {
