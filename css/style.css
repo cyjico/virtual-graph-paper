@@ -154,8 +154,8 @@ body {
 .button-set > * {
   border: 1px solid hsl(0, 50%, 70%);
   font-size: 0.875rem;
-  padding: 0.75em 0px;
-  margin: 1em 1rem;
+  padding: 0.75em 0.5rem;
+  margin: 1em 0.5rem;
   font-family: 'Roboto', sans-serif;
   background-color: hsl(0, 0%, 97%);
 }
