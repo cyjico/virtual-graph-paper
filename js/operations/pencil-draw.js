@@ -16,8 +16,6 @@ class PencilDraw extends Operation {
   }
 
   mousedown({ input, env }) {
-    super.mousedown.call(this);
-
     this.strokeWidth = env.getStrokeWidth();
     this.vertices.push([
       input.relativeCursorPosition.x,
@@ -26,8 +24,6 @@ class PencilDraw extends Operation {
   }
 
   mousemove({ input }) {
-    super.mousemove.call(this);
-
     const dist =
       Math.pow(
         input.relativeCursorPosition.x -
@@ -48,29 +44,11 @@ class PencilDraw extends Operation {
       }
 
       this.operationManager.render();
-      const context = this.operationManager.context;
-      context.beginPath();
-      context.moveTo(
-        this.cartesianGraph.scaleUpX(this.vertices[0][0]),
-        this.cartesianGraph.scaleUpY(this.vertices[0][1])
-      );
-      for (let i = 1; i < this.vertices.length; i++) {
-        context.lineTo(
-          this.cartesianGraph.scaleUpX(this.vertices[i][0]),
-          this.cartesianGraph.scaleUpY(this.vertices[i][1])
-        );
-      }
-      context.lineWidth = this.strokeWidth;
-      context.stroke();
+      this.render();
     }
   }
 
-  mouseup() {
-    super.mouseup.call(this);
-  }
-
   render() {
-    super.render.call(this);
     const context = this.operationManager.context;
     if (this.vertices.length > 0) {
       context.beginPath();
