@@ -39,7 +39,7 @@ class PencilDraw extends Operation {
           this.vertices[this.vertices.length - 1][1],
         2
       );
-    if (dist > 0.25 * 0.25) {
+    if (dist > 0.25 * 0.25 * this.strokeWidth) {
       if (!input.isWheelMouseDown) {
         this.vertices.push([
           input.relativeCursorPosition.x,
