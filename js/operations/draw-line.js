@@ -21,13 +21,13 @@ class DrawLine extends Operation {
     };
   }
 
-  mousedown(e, input) {
+  mousedown({ input }) {
     super.mousedown.call(this);
     this.start.x = input.relativeCursorPosition.x;
     this.start.y = input.relativeCursorPosition.y;
   }
 
-  mousemove(e, input) {
+  mousemove({ input, env }) {
     super.mousemove.call(this);
     const context = this.operationManager.context;
     this.operationManager.render();
@@ -36,17 +36,47 @@ class DrawLine extends Operation {
       this.cartesianGraph.scaleUpX(this.start.x),
       this.cartesianGraph.scaleUpY(this.start.y)
     );
-    context.lineTo(
-      this.cartesianGraph.scaleUpX(input.relativeCursorPosition.x),
-      this.cartesianGraph.scaleUpY(input.relativeCursorPosition.y)
-    );
+    if (env.isDegreeSnapping()) {
+      const rad = 15 * (Math.PI / 180);
+
+      const headingX = input.relativeCursorPosition.x - this.start.x;
+      const headingY = input.relativeCursorPosition.y - this.start.y;
+      const headingRad = Math.round(Math.atan2(headingY, headingX) / rad) * rad;
+      const headingMag = Math.sqrt(headingX * headingX + headingY * headingY);
+
+      context.lineTo(
+        this.cartesianGraph.scaleUpX(
+          Math.cos(headingRad) * headingMag + this.start.x
+        ),
+        this.cartesianGraph.scaleUpY(
+          Math.sin(headingRad) * headingMag + this.start.y
+        )
+      );
+    } else {
+      context.lineTo(
+        this.cartesianGraph.scaleUpX(input.relativeCursorPosition.x),
+        this.cartesianGraph.scaleUpY(input.relativeCursorPosition.y)
+      );
+    }
     context.stroke();
   }
 
-  mouseup(e, input) {
+  mouseup({ input, env }) {
     super.mouseup.call(this);
-    this.end.x = input.relativeCursorPosition.x;
-    this.end.y = input.relativeCursorPosition.y;
+    if (env.isDegreeSnapping()) {
+      const rad = 15 * (Math.PI / 180);
+
+      const headingX = input.relativeCursorPosition.x - this.start.x;
+      const headingY = input.relativeCursorPosition.y - this.start.y;
+      const headingRad = Math.round(Math.atan2(headingY, headingX) / rad) * rad;
+      const headingMag = Math.sqrt(headingX * headingX + headingY * headingY);
+
+      this.end.x = Math.cos(headingRad) * headingMag + this.start.x;
+      this.end.y = Math.sin(headingRad) * headingMag + this.start.y;
+    } else {
+      this.end.x = input.relativeCursorPosition.x;
+      this.end.y = input.relativeCursorPosition.y;
+    }
   }
 
   render() {

@@ -14,7 +14,7 @@ class PencilDraw extends Operation {
     this.vertices = [];
   }
 
-  mousedown(e, input) {
+  mousedown({ input }) {
     super.mousedown.call(this);
     this.vertices.push([
       input.relativeCursorPosition.x,
@@ -22,7 +22,7 @@ class PencilDraw extends Operation {
     ]);
   }
 
-  mousemove(e, input) {
+  mousemove({ input }) {
     super.mousemove.call(this);
     const dist =
       Math.pow(

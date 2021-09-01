@@ -77,6 +77,10 @@ window.addEventListener('load', () => {
       },
       keys: [],
     };
+    const env = {
+      isDegreeSnapping: () => degreeSnapping.checked,
+      isGridSnapping: () => gridSnapping.checked,
+    };
 
     document.addEventListener('keydown', (e) => {
       if (!input.keys.includes(e.code)) {
@@ -114,7 +118,7 @@ window.addEventListener('load', () => {
           operationHistory,
           cartesianGraph
         );
-        currentOperation.mousedown(e, input);
+        currentOperation.mousedown({ e, input, env });
       }
     });
 
@@ -139,7 +143,7 @@ window.addEventListener('load', () => {
       }
 
       if (input.isLeftMouseDown && currentOperation) {
-        currentOperation.mousemove(e, input);
+        currentOperation.mousemove({ e, input, env });
       }
     });
 
@@ -148,7 +152,7 @@ window.addEventListener('load', () => {
       input.isWheelMouseDown = input.isWheelMouseDown && (e.buttons & 4) != 0;
 
       if (!input.isLeftMouseDown && currentOperation) {
-        currentOperation.mouseup(e, input);
+        currentOperation.mouseup({ e, input, env });
         operationHistory.addOperation(currentOperation);
         currentOperation = null;
       }

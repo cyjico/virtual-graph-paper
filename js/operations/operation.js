@@ -17,19 +17,19 @@ class Operation {
     this.cartesianGraph = cartesianGraph;
   }
 
-  mousedown(e, input) {
+  mousedown() {
     if (!this.#active) {
       throw new Error('Unable to update an inactive operation.');
     }
   }
 
-  mousemove(e, input) {
+  mousemove() {
     if (!this.#active) {
       throw new Error('Unable to update an inactive operation.');
     }
   }
 
-  mouseup(e, input) {
+  mouseup() {
     if (!this.#active) {
       throw new Error('Unable to update an inactive operation.');
     } else {
