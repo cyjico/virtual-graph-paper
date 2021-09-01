@@ -23,50 +23,12 @@ class DrawLine extends Operation {
   }
 
   mousedown({ input, env }) {
-    super.mousedown.call(this);
-
     this.strokeWidth = env.getStrokeWidth();
     this.start.x = input.relativeCursorPosition.x;
     this.start.y = input.relativeCursorPosition.y;
   }
 
   mousemove({ input, env }) {
-    super.mousemove.call(this);
-    const context = this.operationManager.context;
-    this.operationManager.render();
-    context.beginPath();
-    context.moveTo(
-      this.cartesianGraph.scaleUpX(this.start.x),
-      this.cartesianGraph.scaleUpY(this.start.y)
-    );
-    if (env.isDegreeSnapping()) {
-      const rad = 15 * (Math.PI / 180);
-
-      const headingX = input.relativeCursorPosition.x - this.start.x;
-      const headingY = input.relativeCursorPosition.y - this.start.y;
-      const headingRad = Math.round(Math.atan2(headingY, headingX) / rad) * rad;
-      const headingMag = Math.sqrt(headingX * headingX + headingY * headingY);
-
-      context.lineTo(
-        this.cartesianGraph.scaleUpX(
-          Math.cos(headingRad) * headingMag + this.start.x
-        ),
-        this.cartesianGraph.scaleUpY(
-          Math.sin(headingRad) * headingMag + this.start.y
-        )
-      );
-    } else {
-      context.lineTo(
-        this.cartesianGraph.scaleUpX(input.relativeCursorPosition.x),
-        this.cartesianGraph.scaleUpY(input.relativeCursorPosition.y)
-      );
-    }
-    context.lineWidth = this.strokeWidth;
-    context.stroke();
-  }
-
-  mouseup({ input, env }) {
-    super.mouseup.call(this);
     if (env.isDegreeSnapping()) {
       const rad = 15 * (Math.PI / 180);
 
@@ -81,10 +43,12 @@ class DrawLine extends Operation {
       this.end.x = input.relativeCursorPosition.x;
       this.end.y = input.relativeCursorPosition.y;
     }
+
+    this.operationManager.render();
+    this.render();
   }
 
   render() {
-    super.render.call(this);
     const context = this.operationManager.context;
     context.beginPath();
     context.moveTo(
