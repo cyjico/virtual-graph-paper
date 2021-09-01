@@ -31,11 +31,6 @@ window.addEventListener('load', () => {
   const operationHistory = new OperationHistory(viewport);
   const cartesianGraph = new CartesianGraph(viewport);
 
-  /** @type {HTMLInputElement} */
-  const gridSnapping = document.querySelector('#snap--grid');
-  /** @type {HTMLInputElement} */
-  const degreeSnapping = document.querySelector('#snap--deg');
-
   {
     // Setting up the toolbox.
     const buttons = document.querySelectorAll(
@@ -78,8 +73,8 @@ window.addEventListener('load', () => {
       keys: [],
     };
     const env = {
-      isDegreeSnapping: () => degreeSnapping.checked,
-      isGridSnapping: () => gridSnapping.checked,
+      isDegreeSnapping: () => document.getElementById('snap--deg').checked,
+      isGridSnapping: () => document.getElementById('snap--grid').checked,
     };
 
     document.addEventListener('keydown', (e) => {
@@ -134,7 +129,7 @@ window.addEventListener('load', () => {
         cartesianGraph.render();
       }
 
-      if (gridSnapping.checked) {
+      if (env.isGridSnapping()) {
         input.relativeCursorPosition.x = Math.round(rx);
         input.relativeCursorPosition.y = Math.round(ry);
       } else {
