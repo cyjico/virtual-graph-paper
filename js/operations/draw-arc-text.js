@@ -90,6 +90,7 @@ class DrawArcText extends DrawArc {
           context.moveTo(cx, cy + radius * signY);
           context.lineTo(cx + radius * signX, cy + radius * signY);
           context.lineTo(cx + radius * signX, cy);
+          context.strokeStyle = this.foregroundColor;
           context.stroke();
         }
         break;
