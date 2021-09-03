@@ -110,6 +110,10 @@ window.addEventListener('load', () => {
       for (let i = 0; i < input.keys.length; i++) {
         if (input.keys[i] === e.code) {
           input.keys.splice(i, 1);
+
+          if (currentOperation) {
+            currentOperation.keyup({ e, input, env });
+          }
           break;
         }
       }

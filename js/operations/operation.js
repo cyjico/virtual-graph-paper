@@ -26,6 +26,8 @@ class Operation {
 
   keydown() {}
 
+  keyup() {}
+
   render() {}
 }
 
