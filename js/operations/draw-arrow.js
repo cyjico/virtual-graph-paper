@@ -73,6 +73,8 @@ class DrawArrow extends Operation {
     const ex = this.cartesianGraph.scaleUpX(this.end.x);
     const ey = this.cartesianGraph.scaleUpY(this.end.y);
 
+    context.save();
+
     context.beginPath();
     context.moveTo(
       this.cartesianGraph.scaleUpX(this.start.x),
@@ -88,11 +90,14 @@ class DrawArrow extends Operation {
       this.cartesianGraph.scaleUpX(this.right.x),
       this.cartesianGraph.scaleUpY(this.right.y)
     );
+    context.lineCap = 'round';
     context.strokeStyle = this.foregroundColor;
     context.lineWidth =
       this.strokeWidth *
       (this.cartesianGraph.scale / this.cartesianGraph.baseScale);
     context.stroke();
+
+    context.restore();
   }
 }
 
