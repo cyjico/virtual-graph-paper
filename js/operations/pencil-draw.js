@@ -11,11 +11,13 @@ class PencilDraw extends Operation {
   constructor(operationManager, cartesianGraph) {
     super(operationManager, cartesianGraph);
 
-    this.strokeWidth = 0;
     this.vertices = [];
+    this.foregroundColor = '#000000';
+    this.strokeWidth = 0;
   }
 
   mousedown({ input, env }) {
+    this.foregroundColor = env.foregroundColor;
     this.strokeWidth = env.strokeWidth;
     this.vertices.push([
       input.relativeCursorPosition.x,
@@ -63,6 +65,7 @@ class PencilDraw extends Operation {
         );
       }
       context.lineWidth = this.strokeWidth;
+      context.strokeStyle = this.foregroundColor;
       context.stroke();
     }
   }

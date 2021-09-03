@@ -27,10 +27,12 @@ class DrawArrow extends Operation {
       x: 0,
       y: 0,
     };
+    this.foregroundColor = '#000000';
     this.strokeWidth = 0;
   }
 
   mousedown({ input, env }) {
+    this.foregroundColor = env.foregroundColor;
     this.strokeWidth = env.strokeWidth;
     this.start.x = input.relativeCursorPosition.x;
     this.start.y = input.relativeCursorPosition.y;
@@ -86,6 +88,7 @@ class DrawArrow extends Operation {
       this.cartesianGraph.scaleUpY(this.right.y)
     );
     context.lineWidth = this.strokeWidth;
+    context.strokeStyle = this.foregroundColor;
     context.stroke();
   }
 }
