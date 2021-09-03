@@ -92,7 +92,7 @@ window.addEventListener('load', () => {
         return document.getElementById('snap--deg').checked;
       },
       get isGridSnapping() {
-        document.getElementById('snap--grid').checked;
+        return document.getElementById('snap--grid').checked;
       },
       get strokeWidth() {
         return parseFloat(
