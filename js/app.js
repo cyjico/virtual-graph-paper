@@ -84,6 +84,10 @@ window.addEventListener('load', () => {
     document.addEventListener('keydown', (e) => {
       if (!input.keys.includes(e.code)) {
         input.keys.push(e.code);
+
+        if (currentOperation) {
+          currentOperation.keydown({ e, input, env });
+        }
       }
 
       if (input.keys[0].includes('Control')) {

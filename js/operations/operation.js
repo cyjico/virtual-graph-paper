@@ -22,6 +22,8 @@ class Operation {
 
   mouseup() {}
 
+  keydown() {}
+
   render() {}
 }
 
