@@ -18,6 +18,13 @@ class DrawArcText extends DrawArc {
       x: 0,
       y: 0,
     };
+    this.backgroundColor = '#ffffff';
+  }
+
+  mousedown(args) {
+    super.mousedown.call(this, args);
+
+    this.backgroundColor = args.env.backgroundColor;
   }
 
   mousemove(args) {
@@ -93,6 +100,7 @@ class DrawArcText extends DrawArc {
 
     context.textAlign = 'center';
     context.textBaseline = 'middle';
+    context.fillStyle = this.backgroundColor;
     context.fillText(
       this.text,
       this.cartesianGraph.scaleUpX(this.center.x + this.textOffset.x),

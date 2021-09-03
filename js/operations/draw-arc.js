@@ -23,10 +23,12 @@ class DrawArc extends Operation {
     this.endRad = 0;
     this.counterClockwise = true;
 
+    this.foregroundColor = '#000000';
     this.strokeWidth = 0;
   }
 
   mousedown({ input, env }) {
+    this.foregroundColor = env.foregroundColor;
     this.strokeWidth = env.strokeWidth;
     this.center.x = input.relativeCursorPosition.x;
     this.center.y = input.relativeCursorPosition.y;
@@ -81,6 +83,7 @@ class DrawArc extends Operation {
       this.counterClockwise
     );
     context.lineWidth = this.strokeWidth;
+    context.strokeStyle = this.foregroundColor;
     context.stroke();
   }
 }
