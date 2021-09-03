@@ -1,6 +1,8 @@
 import DrawArc from './draw-arc.js';
 
 class DrawArcText extends DrawArc {
+  #isKeyDown = false;
+
   /**
    * Creates an instance of DrawArc.
    *
@@ -50,7 +52,21 @@ class DrawArcText extends DrawArc {
     super.mousemove.call(this, args);
   }
 
+  keydown(args) {
+    super.keydown(args);
+    this.#isKeyDown = true;
+  }
+
+  keyup() {
+    this.#isKeyDown = false;
+  }
+
   render() {
+    if (this.#isKeyDown) {
+      // The parent rendered while some key was down!
+      this.operationManager.render();
+    }
+
     const context = this.operationManager.context;
 
     switch (this.text) {
