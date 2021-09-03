@@ -83,6 +83,8 @@ window.addEventListener('load', () => {
      *   get isDegreeSnapping: boolean,
      *   get isGridSnapping: boolean,
      *   get strokeWidth: number,
+     *   get foregroundColor: number,
+     *   get backgroundColor: number,
      * }}
      */
     const env = {
@@ -96,6 +98,12 @@ window.addEventListener('load', () => {
         return parseFloat(
           document.getElementById('stroke-picker').children[1].value
         );
+      },
+      get foregroundColor() {
+        return document.getElementById('foreground-color').value;
+      },
+      get backgroundColor() {
+        return document.getElementById('background-color').value;
       },
     };
 
