@@ -31,7 +31,7 @@ class DrawArrow extends Operation {
   }
 
   mousedown({ input, env }) {
-    this.strokeWidth = env.getStrokeWidth();
+    this.strokeWidth = env.strokeWidth;
     this.start.x = input.relativeCursorPosition.x;
     this.start.y = input.relativeCursorPosition.y;
   }
@@ -41,7 +41,7 @@ class DrawArrow extends Operation {
     const headingY = input.relativeCursorPosition.y - this.start.y;
     let headingRad = Math.atan2(headingY, headingX);
 
-    if (env.isDegreeSnapping()) {
+    if (env.isDegreeSnapping) {
       const rad15 = 15 * (Math.PI / 180);
       headingRad = Math.round(headingRad / rad15) * rad15;
       const headingMag = Math.sqrt(headingX * headingX + headingY * headingY);

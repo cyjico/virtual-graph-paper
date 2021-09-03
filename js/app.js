@@ -77,11 +77,26 @@ window.addEventListener('load', () => {
       },
       keys: [],
     };
+
+    /**
+     * @type {{
+     *   get isDegreeSnapping: boolean,
+     *   get isGridSnapping: boolean,
+     *   get strokeWidth: number,
+     * }}
+     */
     const env = {
-      isDegreeSnapping: () => document.getElementById('snap--deg').checked,
-      isGridSnapping: () => document.getElementById('snap--grid').checked,
-      getStrokeWidth: () =>
-        parseFloat(document.getElementById('stroke-picker').children[1].value),
+      get isDegreeSnapping() {
+        return document.getElementById('snap--deg').checked;
+      },
+      get isGridSnapping() {
+        document.getElementById('snap--grid').checked;
+      },
+      get strokeWidth() {
+        return parseFloat(
+          document.getElementById('stroke-picker').children[1].value
+        );
+      },
     };
 
     document.addEventListener('keydown', (e) => {
@@ -144,7 +159,7 @@ window.addEventListener('load', () => {
         cartesianGraph.render();
       }
 
-      if (env.isGridSnapping()) {
+      if (env.isGridSnapping) {
         input.relativeCursorPosition.x = Math.round(rx);
         input.relativeCursorPosition.y = Math.round(ry);
       } else {

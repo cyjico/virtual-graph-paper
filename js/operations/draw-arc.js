@@ -27,7 +27,7 @@ class DrawArc extends Operation {
   }
 
   mousedown({ input, env }) {
-    this.strokeWidth = env.getStrokeWidth();
+    this.strokeWidth = env.strokeWidth;
     this.center.x = input.relativeCursorPosition.x;
     this.center.y = input.relativeCursorPosition.y;
   }

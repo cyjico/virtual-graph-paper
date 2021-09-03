@@ -23,13 +23,13 @@ class DrawLine extends Operation {
   }
 
   mousedown({ input, env }) {
-    this.strokeWidth = env.getStrokeWidth();
+    this.strokeWidth = env.strokeWidth;
     this.start.x = input.relativeCursorPosition.x;
     this.start.y = input.relativeCursorPosition.y;
   }
 
   mousemove({ input, env }) {
-    if (env.isDegreeSnapping()) {
+    if (env.isDegreeSnapping) {
       const rad = 15 * (Math.PI / 180);
 
       const headingX = input.relativeCursorPosition.x - this.start.x;

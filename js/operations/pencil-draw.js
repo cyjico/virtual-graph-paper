@@ -16,7 +16,7 @@ class PencilDraw extends Operation {
   }
 
   mousedown({ input, env }) {
-    this.strokeWidth = env.getStrokeWidth();
+    this.strokeWidth = env.strokeWidth;
     this.vertices.push([
       input.relativeCursorPosition.x,
       input.relativeCursorPosition.y,
