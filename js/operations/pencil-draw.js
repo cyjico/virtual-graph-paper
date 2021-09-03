@@ -64,8 +64,10 @@ class PencilDraw extends Operation {
           this.cartesianGraph.scaleUpY(this.vertices[i][1])
         );
       }
-      context.lineWidth = this.strokeWidth;
       context.strokeStyle = this.foregroundColor;
+      context.lineWidth =
+        this.strokeWidth *
+        (this.cartesianGraph.scale / this.cartesianGraph.baseScale);
       context.stroke();
     }
   }
