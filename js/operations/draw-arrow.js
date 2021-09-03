@@ -58,10 +58,11 @@ class DrawArrow extends Operation {
     headingRad += Math.PI;
     const rad45 = 45 * (Math.PI / 180);
 
-    this.left.x = Math.cos(headingRad + rad45) + this.end.x;
-    this.left.y = Math.sin(headingRad + rad45) + this.end.y;
-    this.right.x = Math.cos(headingRad - rad45) + this.end.x;
-    this.right.y = Math.sin(headingRad - rad45) + this.end.y;
+    const scalar = this.strokeWidth * 0.5;
+    this.left.x = Math.cos(headingRad + rad45) * scalar + this.end.x;
+    this.left.y = Math.sin(headingRad + rad45) * scalar + this.end.y;
+    this.right.x = Math.cos(headingRad - rad45) * scalar + this.end.x;
+    this.right.y = Math.sin(headingRad - rad45) * scalar + this.end.y;
 
     this.operationManager.render();
     this.render();
