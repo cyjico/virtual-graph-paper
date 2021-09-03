@@ -34,11 +34,17 @@ class DrawArc extends Operation {
     this.center.y = input.relativeCursorPosition.y;
   }
 
-  mousemove({ input }) {
+  mousemove({ input, env }) {
     const x = input.relativeCursorPosition.x - this.center.x;
     const y = input.relativeCursorPosition.y - this.center.y;
     this.radius = Math.sqrt(x * x + y * y);
-    this.endRad = Math.atan2(y, x);
+
+    if (env.isDegreeSnapping) {
+      const rad15 = 15 * (Math.PI / 180);
+      this.endRad = Math.round(Math.atan2(y, x) / rad15) * rad15;
+    } else {
+      this.endRad = Math.atan2(y, x);
+    }
 
     const PI2 = Math.PI * 2;
     if ((this.endRad / PI2) % 1 == (this.startRad / PI2) % 1) {
@@ -50,7 +56,7 @@ class DrawArc extends Operation {
     this.render();
   }
 
-  keydown({ input }) {
+  keydown({ input, env }) {
     if (input.keys.length == 1) {
       switch (input.keys[0]) {
         case 'KeyQ':
@@ -58,6 +64,12 @@ class DrawArc extends Operation {
             input.relativeCursorPosition.y - this.center.y,
             input.relativeCursorPosition.x - this.center.x
           );
+
+          if (env.isDegreeSnapping) {
+            const rad15 = 15 * (Math.PI / 180);
+            this.startRad = Math.round(this.startRad / rad15) * rad15;
+          }
+
           this.operationManager.render();
           this.render();
           break;
