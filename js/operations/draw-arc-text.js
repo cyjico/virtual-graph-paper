@@ -44,8 +44,8 @@ class DrawArcText extends DrawArc {
     this.text = `${(Math.round(rangeRad * (180 / Math.PI) * 100) / 100).toFixed(
       2
     )}°`;
-    this.textOffset.x = Math.cos(this.startRad + medianRad) * 2;
-    this.textOffset.y = Math.sin(this.startRad + medianRad) * CCW_SIGN;
+    this.textOffset.x = Math.cos(startRad + medianRad);
+    this.textOffset.y = Math.sin(startRad + medianRad);
 
     super.mousemove.call(this, args);
   }
