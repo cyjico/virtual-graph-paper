@@ -138,8 +138,8 @@ window.addEventListener('load', () => {
       const ry = cartesianGraph.scaleDownY(e.clientY - bounds.top);
 
       if (input.isWheelMouseDown) {
-        cartesianGraph.offset.x -= (input.relativeCursorPosition.x - rx) * 0.95;
-        cartesianGraph.offset.y -= (input.relativeCursorPosition.y - ry) * 0.95;
+        cartesianGraph.offset.x -= (input.relativeCursorPosition.x - rx) * 0.5;
+        cartesianGraph.offset.y -= (input.relativeCursorPosition.y - ry) * 0.5;
         operationHistory.render();
         cartesianGraph.render();
       }
