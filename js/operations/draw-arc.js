@@ -1,6 +1,9 @@
 import Operation from './operation.js';
 
 class DrawArc extends Operation {
+  static statusMessage =
+    '[LMB] to draw | [Q] to set starting degree | [E] to switch clockwise';
+
   /**
    * Creates an instance of DrawArc.
    *

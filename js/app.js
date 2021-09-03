@@ -4,6 +4,7 @@ import DrawArcText from './operations/draw-arc-text.js';
 import DrawArc from './operations/draw-arc.js';
 import DrawArrow from './operations/draw-arrow.js';
 import DrawLine from './operations/draw-line.js';
+import Operation from './operations/operation.js';
 import PencilDraw from './operations/pencil-draw.js';
 
 function getSelectedOperation() {
@@ -44,6 +45,8 @@ window.addEventListener('load', () => {
         active.classList.remove('button--active-state');
         active = e.currentTarget;
         active.classList.add('button--active-state');
+        document.getElementById('status-line__message').innerText =
+          getSelectedOperation().statusMessage || Operation.statusMessage;
       });
     }
   }

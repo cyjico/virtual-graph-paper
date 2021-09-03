@@ -4,6 +4,8 @@ class Operation {
   /** @type {import('../cartesian-graph.js').default} */
   cartesianGraph;
 
+  static statusMessage = '[LMB] to draw';
+
   /**
    * Creates an instance of Operation.
    *
