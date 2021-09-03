@@ -54,18 +54,19 @@ class DrawArcText extends DrawArc {
     const context = this.operationManager.context;
 
     switch (this.text) {
+      case '-90.00°':
       case '90.00°':
         {
           context.beginPath();
-          const sign = this.counterClockwise ? 1 : -1;
           const radius = this.radius * this.cartesianGraph.scale;
+          const signX = Math.sign(this.textOffset.x);
+          const signY = Math.sign(this.textOffset.y);
           const cx = this.cartesianGraph.scaleUpX(this.center.x);
           const cy = this.cartesianGraph.scaleUpY(this.center.y);
 
-          context.moveTo(cx, cy - radius * sign);
-          context.lineTo(cx + radius * sign, cy - radius * sign);
-          context.lineTo(cx + radius * sign, cy);
-          context.lineTo(cx + radius * sign, cy);
+          context.moveTo(cx, cy + radius * signY);
+          context.lineTo(cx + radius * signX, cy + radius * signY);
+          context.lineTo(cx + radius * signX, cy);
           context.stroke();
         }
         break;
