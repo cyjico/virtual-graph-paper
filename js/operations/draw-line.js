@@ -4,12 +4,12 @@ class DrawLine extends Operation {
   /**
    * Creates an instance of ArrowOperation.
    *
-   * @param {import('../operation-history.js').default} operationManager
+   * @param {import('../operation-history.js').default} operationHistory
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof ArrowOperation
    */
-  constructor(operationManager, cartesianGraph) {
-    super(operationManager, cartesianGraph);
+  constructor(operationHistory, cartesianGraph) {
+    super(operationHistory, cartesianGraph);
 
     this.start = {
       x: 0,
@@ -46,12 +46,12 @@ class DrawLine extends Operation {
       this.end.y = input.relativeCursorPosition.y;
     }
 
-    this.operationManager.render();
+    this.operationHistory.render();
     this.render();
   }
 
   render() {
-    const context = this.operationManager.context;
+    const context = this.operationHistory.context;
     context.beginPath();
     context.moveTo(
       this.cartesianGraph.scaleUpX(this.start.x),

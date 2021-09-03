@@ -4,12 +4,12 @@ class DrawArrow extends Operation {
   /**
    * Creates an instance of ArrowOperation.
    *
-   * @param {import('../operation-history.js').default} operationManager
+   * @param {import('../operation-history.js').default} operationHistory
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof ArrowOperation
    */
-  constructor(operationManager, cartesianGraph) {
-    super(operationManager, cartesianGraph);
+  constructor(operationHistory, cartesianGraph) {
+    super(operationHistory, cartesianGraph);
 
     this.start = {
       x: 0,
@@ -64,12 +64,12 @@ class DrawArrow extends Operation {
     this.right.x = Math.cos(headingRad - rad45) * scalar + this.end.x;
     this.right.y = Math.sin(headingRad - rad45) * scalar + this.end.y;
 
-    this.operationManager.render();
+    this.operationHistory.render();
     this.render();
   }
 
   render() {
-    const context = this.operationManager.context;
+    const context = this.operationHistory.context;
     const ex = this.cartesianGraph.scaleUpX(this.end.x);
     const ey = this.cartesianGraph.scaleUpY(this.end.y);
 

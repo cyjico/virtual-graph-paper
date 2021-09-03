@@ -6,12 +6,12 @@ class DrawArcText extends DrawArc {
   /**
    * Creates an instance of DrawArc.
    *
-   * @param {import('../operation-history.js').default} operationManager
+   * @param {import('../operation-history.js').default} operationHistory
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof DrawArcText
    */
-  constructor(operationManager, cartesianGraph) {
-    super(operationManager, cartesianGraph);
+  constructor(operationHistory, cartesianGraph) {
+    super(operationHistory, cartesianGraph);
 
     this.text = '';
     this.textOffset = {
@@ -71,10 +71,10 @@ class DrawArcText extends DrawArc {
   render() {
     if (this.#isKeyDown) {
       // The parent rendered while some key was down!
-      this.operationManager.render();
+      this.operationHistory.render();
     }
 
-    const context = this.operationManager.context;
+    const context = this.operationHistory.context;
     let scalar = 1.5;
 
     switch (this.text) {

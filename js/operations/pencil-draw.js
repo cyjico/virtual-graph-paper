@@ -4,12 +4,12 @@ class PencilDraw extends Operation {
   /**
    * Creates an instance of ArrowOperation.
    *
-   * @param {import('../operation-history.js').default} operationManager
+   * @param {import('../operation-history.js').default} operationHistory
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof ArrowOperation
    */
-  constructor(operationManager, cartesianGraph) {
-    super(operationManager, cartesianGraph);
+  constructor(operationHistory, cartesianGraph) {
+    super(operationHistory, cartesianGraph);
 
     this.vertices = [];
     this.foregroundColor = '#000000';
@@ -45,13 +45,13 @@ class PencilDraw extends Operation {
         ]);
       }
 
-      this.operationManager.render();
+      this.operationHistory.render();
       this.render();
     }
   }
 
   render() {
-    const context = this.operationManager.context;
+    const context = this.operationHistory.context;
     if (this.vertices.length > 0) {
       context.beginPath();
       context.moveTo(

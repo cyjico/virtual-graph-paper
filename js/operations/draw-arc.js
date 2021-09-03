@@ -7,12 +7,12 @@ class DrawArc extends Operation {
   /**
    * Creates an instance of DrawArc.
    *
-   * @param {import('../operation-history.js').default} operationManager
+   * @param {import('../operation-history.js').default} operationHistory
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof DrawArc
    */
-  constructor(operationManager, cartesianGraph) {
-    super(operationManager, cartesianGraph);
+  constructor(operationHistory, cartesianGraph) {
+    super(operationHistory, cartesianGraph);
 
     this.center = {
       x: 0,
@@ -52,7 +52,7 @@ class DrawArc extends Operation {
         this.startRad + Math.PI * 2 * (this.counterClockwise ? -1 : 1);
     }
 
-    this.operationManager.render();
+    this.operationHistory.render();
     this.render();
   }
 
@@ -70,12 +70,12 @@ class DrawArc extends Operation {
             this.startRad = Math.round(this.startRad / rad15) * rad15;
           }
 
-          this.operationManager.render();
+          this.operationHistory.render();
           this.render();
           break;
         case 'KeyE':
           this.counterClockwise = !this.counterClockwise;
-          this.operationManager.render();
+          this.operationHistory.render();
           this.render();
           break;
       }
@@ -83,7 +83,7 @@ class DrawArc extends Operation {
   }
 
   render() {
-    const context = this.operationManager.context;
+    const context = this.operationHistory.context;
 
     context.beginPath();
     context.arc(
