@@ -61,8 +61,10 @@ class DrawLine extends Operation {
       this.cartesianGraph.scaleUpX(this.end.x),
       this.cartesianGraph.scaleUpY(this.end.y)
     );
-    context.lineWidth = this.strokeWidth;
     context.strokeStyle = this.foregroundColor;
+    context.lineWidth =
+      this.strokeWidth *
+      (this.cartesianGraph.scale / this.cartesianGraph.baseScale);
     context.stroke();
   }
 }
