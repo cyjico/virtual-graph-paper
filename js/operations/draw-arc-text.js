@@ -50,7 +50,7 @@ class DrawArcText extends DrawArc {
     const rangeRad = endRad - startRad;
     const medianRad = rangeRad / 2;
 
-    this.text = `${(
+    this.text = `  ${(
       Math.round(rangeRad * (180 / Math.PI) * -100) / 100
     ).toFixed(2)}°`;
     this.textOffset.x = Math.cos(startRad + medianRad);
@@ -75,10 +75,11 @@ class DrawArcText extends DrawArc {
     }
 
     const context = this.operationManager.context;
+    let scalar = 1.5;
 
     switch (this.text) {
-      case '-90.00°':
-      case '90.00°':
+      case '  -90.00°':
+      case '  90.00°':
         {
           context.beginPath();
           const radius = this.radius * this.cartesianGraph.scale;
@@ -92,6 +93,7 @@ class DrawArcText extends DrawArc {
           context.lineTo(cx + radius * signX, cy);
           context.strokeStyle = this.foregroundColor;
           context.stroke();
+          scalar = 1.75;
         }
         break;
       default:
@@ -102,10 +104,19 @@ class DrawArcText extends DrawArc {
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillStyle = this.backgroundColor;
+    context.font = `${
+      ((10 * this.cartesianGraph.scale) / this.cartesianGraph.baseScale) *
+      this.strokeWidth *
+      0.75
+    }px sans-serif`;
     context.fillText(
       this.text,
-      this.cartesianGraph.scaleUpX(this.center.x + this.textOffset.x),
-      this.cartesianGraph.scaleUpY(this.center.y + this.textOffset.y)
+      this.cartesianGraph.scaleUpX(
+        this.center.x + this.textOffset.x * this.radius * scalar
+      ),
+      this.cartesianGraph.scaleUpY(
+        this.center.y + this.textOffset.y * this.radius * scalar
+      )
     );
   }
 }
