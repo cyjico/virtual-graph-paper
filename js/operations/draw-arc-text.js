@@ -21,6 +21,22 @@ class DrawArcText extends DrawArc {
     this.backgroundColor = '#ffffff';
   }
 
+  /**
+   * Converts a number that ranges from `180 to -180` to `-360 to 360`.
+   *
+   * @param {number} rad
+   * @return {number}
+   */
+  #convertToRange(rad) {
+    if (this.counterClockwise && rad > 0) {
+      rad -= Math.PI * 2 * (1 + Math.floor(rad / (Math.PI * 2)));
+    } else if (!this.counterClockwise && rad < 0) {
+      rad += Math.PI * 2 * (1 + Math.floor(-rad / (Math.PI * 2)));
+    }
+
+    return rad;
+  }
+
   onMousedown(args) {
     super.onMousedown.call(this, args);
 
@@ -28,33 +44,17 @@ class DrawArcText extends DrawArc {
   }
 
   onMousemove(args) {
-    const PI2 = Math.PI * 2;
-    const CCW_SIGN = this.counterClockwise ? 1 : -1;
+    super.onMousemove.call(this, args, false);
 
-    const startRad =
-      (this.counterClockwise && this.startRad > 0) ||
-      (!this.counterClockwise && this.startRad < 0)
-        ? this.startRad - PI2 * CCW_SIGN
-        : this.startRad;
-    const endRad = (() => {
-      const baseRad =
-        (this.counterClockwise && this.endRad > 0) ||
-        (!this.counterClockwise && this.endRad < 0)
-          ? this.endRad - PI2 * CCW_SIGN
-          : this.endRad;
-
-      return (
-        baseRad - (Math.abs(baseRad) <= Math.abs(startRad) ? PI2 * CCW_SIGN : 0)
-      );
-    })();
-    const rangeRad = endRad - startRad;
-    const medianRad = rangeRad / 2;
-
+    const rangeRad = this.#convertToRange(this.endRad - this.startRad);
     this.text = `  ${Math.round(rangeRad * (180 / Math.PI) * -100) / 100}°`;
-    this.textOffset.x = Math.cos(startRad + medianRad);
-    this.textOffset.y = Math.sin(startRad + medianRad);
 
-    super.onMousemove.call(this, args);
+    const headingRad = this.#convertToRange(this.startRad) + rangeRad / 2;
+    this.textOffset.x = Math.cos(headingRad);
+    this.textOffset.y = Math.sin(headingRad);
+
+    this.operationHistory.render();
+    this.render();
   }
 
   onKeydown(args) {
