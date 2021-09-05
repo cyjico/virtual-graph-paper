@@ -131,7 +131,7 @@ window.addEventListener('load', () => {
 
     document.addEventListener('keyup', (e) => {
       for (let i = 0; i < input.keys.length; i++) {
-        if (input.keys[i] === e.code) {
+        if (input.keys[i] === e.key) {
           input.keys.splice(i, 1);
 
           if (currentOperation) {
