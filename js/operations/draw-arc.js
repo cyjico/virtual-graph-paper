@@ -34,7 +34,7 @@ class DrawArc extends Operation {
     this.center.y = input.relativeCursorPosition.y;
   }
 
-  onMousemove({ input, env }) {
+  onMousemove({ input, env }, render = true) {
     const x = input.relativeCursorPosition.x - this.center.x;
     const y = input.relativeCursorPosition.y - this.center.y;
     this.radius = Math.sqrt(x * x + y * y);
@@ -46,14 +46,15 @@ class DrawArc extends Operation {
       this.endRad = Math.atan2(y, x);
     }
 
-    const PI2 = Math.PI * 2;
-    if ((this.endRad / PI2) % 1 == (this.startRad / PI2) % 1) {
+    if (Math.abs(this.endRad - this.startRad) <= Number.EPSILON) {
       this.endRad =
         this.startRad + Math.PI * 2 * (this.counterClockwise ? -1 : 1);
     }
 
-    this.operationHistory.render();
-    this.render();
+    if (render) {
+      this.operationHistory.render();
+      this.render();
+    }
   }
 
   onKeydown({ input, env }) {
@@ -94,6 +95,7 @@ class DrawArc extends Operation {
       this.endRad,
       this.counterClockwise
     );
+
     context.strokeStyle = this.foregroundColor;
     context.lineWidth =
       this.strokeWidth *
