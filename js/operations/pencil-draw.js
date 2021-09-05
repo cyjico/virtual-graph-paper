@@ -12,7 +12,7 @@ class PencilDraw extends Operation {
     super(operationHistory, cartesianGraph);
 
     this.vertices = [];
-    this.foregroundColor = '#000000';
+    this.foregroundColor = '';
     this.strokeWidth = 0;
   }
 

@@ -19,7 +19,7 @@ class DrawLine extends Operation {
       x: 0,
       y: 0,
     };
-    this.foregroundColor = '#000000';
+    this.foregroundColor = '';
     this.strokeWidth = 0;
   }
 

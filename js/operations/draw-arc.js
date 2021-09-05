@@ -23,7 +23,7 @@ class DrawArc extends Operation {
     this.endRad = 0;
     this.counterClockwise = true;
 
-    this.foregroundColor = '#000000';
+    this.foregroundColor = '';
     this.strokeWidth = 0;
   }
 
