@@ -22,7 +22,7 @@ class DrawArcText extends DrawArc {
   }
 
   onMousedown(args) {
-    super.mousedown.call(this, args);
+    super.onMousedown.call(this, args);
 
     this.backgroundColor = args.env.backgroundColor;
   }
@@ -56,11 +56,11 @@ class DrawArcText extends DrawArc {
     this.textOffset.x = Math.cos(startRad + medianRad);
     this.textOffset.y = Math.sin(startRad + medianRad);
 
-    super.mousemove.call(this, args);
+    super.onMousemove.call(this, args);
   }
 
   onKeydown(args) {
-    super.keydown(args);
+    super.onKeydown.call(this, args);
     this.#isKeyDown = true;
   }
 
