@@ -34,6 +34,10 @@ function getSelectedOperation() {
 
 window.addEventListener('load', () => {
   const viewport = document.getElementById('viewport');
+  const statusBar = {
+    coords: document.getElementById('status-bar__coords'),
+    message: document.getElementById('status-bar__message'),
+  };
   const operationHistory = new OperationHistory(viewport);
   const cartesianGraph = new CartesianGraph(viewport);
   /** @type {import('./operations/operation.js').default|import('./operations/active-operations/active-operation.js').default} */
@@ -50,7 +54,7 @@ window.addEventListener('load', () => {
         activeTool.classList.remove('button--active-state');
         activeTool = e.currentTarget;
         activeTool.classList.add('button--active-state');
-        document.getElementById('status-line__message').innerText =
+        statusBar.message.innerText =
           getSelectedOperation().statusMessage || Operation.statusMessage;
 
         if (currentOperation instanceof ActiveOperation) {

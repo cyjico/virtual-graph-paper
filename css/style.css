@@ -17,17 +17,17 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-#status-line__coords, #status-line__message {
+#status-bar__coords, #status-bar__message {
   padding: 0.5em 0px;
   font-size: 0.9rem;
 }
 
-#status-line__message {
+#status-bar__message {
   grid-column: 2;
   text-align: center;
 }
 
-#status-line__coords {
+#status-bar__coords {
   text-align: center;
 }
 
