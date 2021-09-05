@@ -6,7 +6,7 @@ import Operation from '../operation.js';
  * button is down.
  */
 class ActiveOperation extends Operation {
-  static statusMessage = '[LMB] to start. [ESC] to quit.';
+  static statusMessage = '[LMB] to start | [ESC] to quit';
 
   #active = true;
 

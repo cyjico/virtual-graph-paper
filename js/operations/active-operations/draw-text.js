@@ -13,7 +13,7 @@ function clamp(x, min, max) {
 }
 
 class DrawText extends ActiveOperation {
-  static statusMessage = 'Press any key to type. [ESC] to stop typing.';
+  static statusMessage = 'Press any key to type | [ESC] to stop typing';
 
   /**
    * Creates an instance of DrawText.
