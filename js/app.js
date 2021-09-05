@@ -30,7 +30,7 @@ function getSelectedOperation() {
 }
 
 window.addEventListener('load', () => {
-  const viewport = document.getElementsByTagName('main')[0];
+  const viewport = document.getElementById('viewport');
   const operationHistory = new OperationHistory(viewport);
   const cartesianGraph = new CartesianGraph(viewport);
 
