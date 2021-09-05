@@ -6,6 +6,7 @@ import DrawArcText from './operations/draw-arc-text.js';
 import DrawArc from './operations/draw-arc.js';
 import DrawArrow from './operations/draw-arrow.js';
 import DrawLine from './operations/draw-line.js';
+import DrawRectangle from './operations/draw-rectangle.js';
 import Operation from './operations/operation.js';
 import PencilDraw from './operations/pencil-draw.js';
 
@@ -25,7 +26,7 @@ function getSelectedOperation() {
     case 'Arc (w/ text)':
       return DrawArcText;
     case 'Rectangle':
-      break;
+      return DrawRectangle;
     case 'Text':
       return DrawText;
   }
