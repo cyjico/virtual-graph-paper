@@ -33,13 +33,13 @@ function getSelectedOperation() {
 }
 
 window.addEventListener('load', () => {
-  const viewport = document.getElementById('viewport');
   const statusBar = {
-    coords: document.getElementById('status-bar__coords'),
-    message: document.getElementById('status-bar__message'),
+    coordsElement: document.getElementById('status-bar__coords'),
+    messageElement: document.getElementById('status-bar__message'),
   };
-  const operationHistory = new OperationHistory(viewport);
-  const cartesianGraph = new CartesianGraph(viewport);
+  const viewportElement = document.getElementById('viewport');
+  const operationHistory = new OperationHistory(viewportElement);
+  const cartesianGraph = new CartesianGraph(viewportElement);
   /** @type {import('./operations/operation.js').default|import('./operations/active-operations/active-operation.js').default} */
   let currentOperation = null;
 
@@ -54,7 +54,7 @@ window.addEventListener('load', () => {
         activeTool.classList.remove('button--active-state');
         activeTool = e.currentTarget;
         activeTool.classList.add('button--active-state');
-        statusBar.message.innerText =
+        statusBar.messageElement.innerText =
           getSelectedOperation().statusMessage || Operation.statusMessage;
 
         if (currentOperation instanceof ActiveOperation) {
@@ -152,7 +152,7 @@ window.addEventListener('load', () => {
     }
   });
 
-  viewport.addEventListener('mousedown', (e) => {
+  viewportElement.addEventListener('mousedown', (e) => {
     input.isLeftMouseDown = (e.buttons & 1) != 0;
     input.isWheelMouseDown = (e.buttons & 4) != 0;
 
@@ -173,7 +173,7 @@ window.addEventListener('load', () => {
     }
   });
 
-  viewport.addEventListener('mousemove', (e) => {
+  viewportElement.addEventListener('mousemove', (e) => {
     const bounds = e.currentTarget.getBoundingClientRect();
     const rx = cartesianGraph.scaleDownX(e.clientX - bounds.left);
     const ry = cartesianGraph.scaleDownY(e.clientY - bounds.top);
@@ -193,7 +193,9 @@ window.addEventListener('load', () => {
       input.relativeCursorPosition.y = ry;
     }
 
-    statusBar.coords.innerText = `X: ${rx.toFixed(2)} Y: ${-ry.toFixed(2)}`;
+    statusBar.coordsElement.innerText = `X: ${rx.toFixed(2)} Y: ${-ry.toFixed(
+      2
+    )}`;
 
     if (
       (input.isLeftMouseDown && currentOperation != null) ||
@@ -217,7 +219,7 @@ window.addEventListener('load', () => {
     }
   });
 
-  viewport.addEventListener(
+  viewportElement.addEventListener(
     'wheel',
     (e) => {
       cartesianGraph.scale = Math.min(
