@@ -115,7 +115,7 @@ window.addEventListener('load', () => {
     if (!input.keys.includes(e.key)) {
       input.keys.push(e.key);
 
-      if (currentOperation) {
+      if (currentOperation != null) {
         document.activeElement?.blur?.();
         currentOperation.onKeydown({ e, input, env });
       }
@@ -140,9 +140,7 @@ window.addEventListener('load', () => {
       if (input.keys[i].toUpperCase() == e.key.toUpperCase()) {
         input.keys.splice(i, 1);
 
-        if (currentOperation) {
-          currentOperation.onKeyup({ e, input, env });
-        }
+        currentOperation?.onKeyup?.({ e, input, env });
         break;
       }
     }
@@ -156,13 +154,16 @@ window.addEventListener('load', () => {
       if (currentOperation instanceof ActiveOperation) {
         currentOperation.active = false;
         operationHistory.addOperation(currentOperation);
+        currentOperation = null;
       }
 
-      currentOperation = new (getSelectedOperation())(
-        operationHistory,
-        cartesianGraph
-      );
-      currentOperation.onMousedown({ e, input, env });
+      if (currentOperation == null) {
+        currentOperation = new (getSelectedOperation())(
+          operationHistory,
+          cartesianGraph
+        );
+        currentOperation.onMousedown({ e, input, env });
+      }
     }
   });
 
@@ -187,7 +188,7 @@ window.addEventListener('load', () => {
     }
 
     if (
-      (input.isLeftMouseDown && currentOperation) ||
+      (input.isLeftMouseDown && currentOperation != null) ||
       currentOperation instanceof ActiveOperation
     ) {
       currentOperation.onMousemove({ e, input, env });
@@ -198,11 +199,12 @@ window.addEventListener('load', () => {
     input.isLeftMouseDown = input.isLeftMouseDown && (e.buttons & 1) != 0;
     input.isWheelMouseDown = input.isWheelMouseDown && (e.buttons & 4) != 0;
 
-    if (!input.isLeftMouseDown && currentOperation) {
+    if (!input.isLeftMouseDown && currentOperation != null) {
       currentOperation.onMouseup({ e, input, env });
 
       if (!(currentOperation instanceof ActiveOperation)) {
         operationHistory.addOperation(currentOperation);
+        currentOperation = null;
       }
     }
   });
