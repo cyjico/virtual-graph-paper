@@ -50,9 +50,7 @@ class DrawArcText extends DrawArc {
     const rangeRad = endRad - startRad;
     const medianRad = rangeRad / 2;
 
-    this.text = `  ${(
-      Math.round(rangeRad * (180 / Math.PI) * -100) / 100
-    ).toFixed(2)}°`;
+    this.text = `  ${Math.round(rangeRad * (180 / Math.PI) * -100) / 100}°`;
     this.textOffset.x = Math.cos(startRad + medianRad);
     this.textOffset.y = Math.sin(startRad + medianRad);
 
