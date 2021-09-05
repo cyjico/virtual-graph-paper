@@ -108,21 +108,21 @@ window.addEventListener('load', () => {
     };
 
     document.addEventListener('keydown', (e) => {
-      if (!input.keys.includes(e.code)) {
-        input.keys.push(e.code);
+      if (!input.keys.includes(e.key)) {
+        input.keys.push(e.key);
 
         if (currentOperation) {
           currentOperation.keydown({ e, input, env });
         }
       }
 
-      if (input.keys[0].includes('Control')) {
-        if (input.keys.length == 2 && input.keys[1] == 'KeyZ') {
+      if (input.keys[0] == 'Control') {
+        if (input.keys.length == 2 && input.keys[1].toUpperCase() == 'Z') {
           operationHistory.undoOperation();
         } else if (
           input.keys.length == 3 &&
-          input.keys[1].includes('Shift') &&
-          input.keys[2] == 'KeyZ'
+          input.keys[1] == 'Shift' &&
+          input.keys[2].toUpperCase() == 'Z'
         ) {
           operationHistory.redoOperation();
         }

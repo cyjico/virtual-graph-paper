@@ -58,8 +58,8 @@ class DrawArc extends Operation {
 
   keydown({ input, env }) {
     if (input.keys.length == 1) {
-      switch (input.keys[0]) {
-        case 'KeyQ':
+      switch (input.keys[0].toUpperCase()) {
+        case 'Q':
           this.startRad = Math.atan2(
             input.relativeCursorPosition.y - this.center.y,
             input.relativeCursorPosition.x - this.center.x
@@ -73,7 +73,7 @@ class DrawArc extends Operation {
           this.operationHistory.render();
           this.render();
           break;
-        case 'KeyE':
+        case 'E':
           this.counterClockwise = !this.counterClockwise;
           this.operationHistory.render();
           this.render();
