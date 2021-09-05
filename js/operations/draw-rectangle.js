@@ -54,7 +54,9 @@ class DrawRectangle extends Operation {
 
     context.fillStyle = this.backgroundColor;
     context.strokeStyle = this.foregroundColor;
-    context.lineWidth = this.strokeWidth;
+    context.lineWidth =
+      this.strokeWidth *
+      (this.cartesianGraph.scale / this.cartesianGraph.baseScale);
     context.stroke();
     context.fill();
   }
