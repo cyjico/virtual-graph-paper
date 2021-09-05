@@ -116,6 +116,7 @@ window.addEventListener('load', () => {
       input.keys.push(e.key);
 
       if (currentOperation) {
+        document.activeElement?.blur?.();
         currentOperation.onKeydown({ e, input, env });
       }
     }
