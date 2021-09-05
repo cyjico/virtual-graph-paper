@@ -36,8 +36,8 @@ body {
 }
 
 #toolbox label {
-  margin-left: 0.5em;
-  margin-right: 0.5em;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   font-size: 1rem;
   display: block;
 }
