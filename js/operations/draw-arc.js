@@ -27,14 +27,14 @@ class DrawArc extends Operation {
     this.strokeWidth = 0;
   }
 
-  mousedown({ input, env }) {
+  onMousedown({ input, env }) {
     this.foregroundColor = env.foregroundColor;
     this.strokeWidth = env.strokeWidth;
     this.center.x = input.relativeCursorPosition.x;
     this.center.y = input.relativeCursorPosition.y;
   }
 
-  mousemove({ input, env }) {
+  onMousemove({ input, env }) {
     const x = input.relativeCursorPosition.x - this.center.x;
     const y = input.relativeCursorPosition.y - this.center.y;
     this.radius = Math.sqrt(x * x + y * y);
@@ -56,7 +56,7 @@ class DrawArc extends Operation {
     this.render();
   }
 
-  keydown({ input, env }) {
+  onKeydown({ input, env }) {
     if (input.keys.length == 1) {
       switch (input.keys[0].toUpperCase()) {
         case 'Q':

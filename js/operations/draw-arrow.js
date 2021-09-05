@@ -31,14 +31,14 @@ class DrawArrow extends Operation {
     this.strokeWidth = 0;
   }
 
-  mousedown({ input, env }) {
+  onMousedown({ input, env }) {
     this.foregroundColor = env.foregroundColor;
     this.strokeWidth = env.strokeWidth;
     this.start.x = input.relativeCursorPosition.x;
     this.start.y = input.relativeCursorPosition.y;
   }
 
-  mousemove({ input, env }) {
+  onMousemove({ input, env }) {
     const headingX = input.relativeCursorPosition.x - this.start.x;
     const headingY = input.relativeCursorPosition.y - this.start.y;
     let headingRad = Math.atan2(headingY, headingX);

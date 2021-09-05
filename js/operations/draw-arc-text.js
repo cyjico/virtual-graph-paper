@@ -21,13 +21,13 @@ class DrawArcText extends DrawArc {
     this.backgroundColor = '#ffffff';
   }
 
-  mousedown(args) {
+  onMousedown(args) {
     super.mousedown.call(this, args);
 
     this.backgroundColor = args.env.backgroundColor;
   }
 
-  mousemove(args) {
+  onMousemove(args) {
     const PI2 = Math.PI * 2;
     const CCW_SIGN = this.counterClockwise ? 1 : -1;
 
@@ -59,12 +59,12 @@ class DrawArcText extends DrawArc {
     super.mousemove.call(this, args);
   }
 
-  keydown(args) {
+  onKeydown(args) {
     super.keydown(args);
     this.#isKeyDown = true;
   }
 
-  keyup() {
+  onKeyup() {
     this.#isKeyDown = false;
   }
 

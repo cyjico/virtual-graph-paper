@@ -16,7 +16,7 @@ class PencilDraw extends Operation {
     this.strokeWidth = 0;
   }
 
-  mousedown({ input, env }) {
+  onMousedown({ input, env }) {
     this.foregroundColor = env.foregroundColor;
     this.strokeWidth = env.strokeWidth;
     this.vertices.push([
@@ -25,7 +25,7 @@ class PencilDraw extends Operation {
     ]);
   }
 
-  mousemove({ input }) {
+  onMousemove({ input }) {
     const dist =
       Math.pow(
         input.relativeCursorPosition.x -

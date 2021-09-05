@@ -1,9 +1,4 @@
 class Operation {
-  /** @type {import('../operation-history.js').default} */
-  operationHistory;
-  /** @type {import('../cartesian-graph.js').default} */
-  cartesianGraph;
-
   static statusMessage = '[LMB] to draw';
 
   /**
@@ -14,19 +9,21 @@ class Operation {
    * @memberof Operation
    */
   constructor(operationHistory, cartesianGraph) {
+    /** @type {import('../operation-history.js').default} */
     this.operationHistory = operationHistory;
+    /** @type {import('../cartesian-graph.js').default} */
     this.cartesianGraph = cartesianGraph;
   }
 
-  mousedown() {}
+  onMousedown() {}
 
-  mousemove() {}
+  onMousemove() {}
 
-  mouseup() {}
+  onMouseup() {}
 
-  keydown() {}
+  onKeydown() {}
 
-  keyup() {}
+  onKeyup() {}
 
   render() {}
 }
