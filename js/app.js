@@ -1,6 +1,7 @@
 import CartesianGraph from './cartesian-graph.js';
 import OperationHistory from './operation-history.js';
 import ActiveOperation from './operations/active-operations/active-operation.js';
+import DrawText from './operations/active-operations/draw-text.js';
 import DrawArcText from './operations/draw-arc-text.js';
 import DrawArc from './operations/draw-arc.js';
 import DrawArrow from './operations/draw-arrow.js';
@@ -26,7 +27,7 @@ function getSelectedOperation() {
     case 'Rectangle':
       break;
     case 'Text':
-      break;
+      return DrawText;
   }
 }
 
