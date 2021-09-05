@@ -146,7 +146,7 @@ window.addEventListener('load', () => {
       input.isLeftMouseDown = (e.buttons & 1) != 0;
       input.isWheelMouseDown = (e.buttons & 4) != 0;
 
-      if (input.isLeftMouseDown && !currentOperation) {
+      if (input.isLeftMouseDown) {
         currentOperation = new (getSelectedOperation())(
           operationHistory,
           cartesianGraph
@@ -187,7 +187,6 @@ window.addEventListener('load', () => {
       if (!input.isLeftMouseDown && currentOperation) {
         currentOperation.mouseup({ e, input, env });
         operationHistory.addOperation(currentOperation);
-        currentOperation = null;
       }
     });
 
