@@ -13,7 +13,7 @@ body {
   background-color: hsl(0, 0%, 97%);
   min-height: 100vh;
   grid-template-rows: auto 1fr;
-  grid-template-columns: 1fr 8fr 1fr;
+  grid-template-columns: 0.5fr 7fr 1fr;
   font-family: 'Roboto', sans-serif;
 }
 
