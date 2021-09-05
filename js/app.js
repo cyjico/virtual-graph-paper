@@ -1,5 +1,6 @@
 import CartesianGraph from './cartesian-graph.js';
 import OperationHistory from './operation-history.js';
+import ActiveOperation from './operations/active-operations/active-operation.js';
 import DrawArcText from './operations/draw-arc-text.js';
 import DrawArc from './operations/draw-arc.js';
 import DrawArrow from './operations/draw-arrow.js';
@@ -49,6 +50,10 @@ window.addEventListener('load', () => {
         activeTool.classList.add('button--active-state');
         document.getElementById('status-line__message').innerText =
           getSelectedOperation().statusMessage || Operation.statusMessage;
+        if (currentOperation instanceof ActiveOperation) {
+          currentOperation.active = false;
+          operationHistory.addOperation(currentOperation);
+        }
 
         currentOperation = null;
       });
@@ -146,6 +151,9 @@ window.addEventListener('load', () => {
     input.isWheelMouseDown = (e.buttons & 4) != 0;
 
     if (input.isLeftMouseDown) {
+      if (currentOperation instanceof ActiveOperation) {
+        currentOperation.active = false;
+        operationHistory.addOperation(currentOperation);
       }
 
       currentOperation = new (getSelectedOperation())(
@@ -188,6 +196,7 @@ window.addEventListener('load', () => {
     if (!input.isLeftMouseDown && currentOperation) {
       currentOperation.onMouseup({ e, input, env });
 
+      if (!(currentOperation instanceof ActiveOperation)) {
         operationHistory.addOperation(currentOperation);
       }
     }
