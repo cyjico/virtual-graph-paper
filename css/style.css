@@ -13,21 +13,19 @@ body {
   background-color: hsl(0, 0%, 97%);
   min-height: 100vh;
   grid-template-rows: auto 1fr;
-  grid-template-columns: 0.5fr 7fr 1fr;
+  grid-template-columns: 1fr 8fr 1fr;
   font-family: 'Roboto', sans-serif;
+}
+
+#status-bar {
+  display: grid;
+  grid-column: 1 / 4;
+  grid-template-columns: 1fr 1fr;
 }
 
 #status-bar__coords, #status-bar__message {
   padding: 0.5em 0px;
   font-size: 0.9rem;
-}
-
-#status-bar__message {
-  grid-column: 2;
-  text-align: center;
-}
-
-#status-bar__coords {
   text-align: center;
 }
 
