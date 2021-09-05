@@ -50,6 +50,7 @@ window.addEventListener('load', () => {
         activeTool.classList.add('button--active-state');
         document.getElementById('status-line__message').innerText =
           getSelectedOperation().statusMessage || Operation.statusMessage;
+
         if (currentOperation instanceof ActiveOperation) {
           currentOperation.active = false;
           operationHistory.addOperation(currentOperation);
@@ -184,7 +185,10 @@ window.addEventListener('load', () => {
       input.relativeCursorPosition.y = ry;
     }
 
-    if (input.isLeftMouseDown && currentOperation) {
+    if (
+      (input.isLeftMouseDown && currentOperation) ||
+      currentOperation instanceof ActiveOperation
+    ) {
       currentOperation.onMousemove({ e, input, env });
     }
   });
