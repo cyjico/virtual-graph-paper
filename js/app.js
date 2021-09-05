@@ -188,8 +188,6 @@ window.addEventListener('load', () => {
     if (!input.isLeftMouseDown && currentOperation) {
       currentOperation.onMouseup({ e, input, env });
 
-      if (!input.isLeftMouseDown && currentOperation) {
-        currentOperation.mouseup({ e, input, env });
         operationHistory.addOperation(currentOperation);
       }
     }
