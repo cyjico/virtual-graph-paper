@@ -2,7 +2,8 @@ import Operation from '../operation.js';
 
 /**
  * A type of operation that requires the user to manually disable. The operation
- * is automatically disabled when the user switches tools.
+ * is automatically disabled when the user switches tools or the left mouse
+ * button is down.
  */
 class ActiveOperation extends Operation {
   static statusMessage = '[LMB] to start. [ESC] to quit.';
