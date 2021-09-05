@@ -193,6 +193,8 @@ window.addEventListener('load', () => {
       input.relativeCursorPosition.y = ry;
     }
 
+    statusBar.coords.innerText = `X: ${rx.toFixed(2)} Y: ${ry.toFixed(2)}`;
+
     if (
       (input.isLeftMouseDown && currentOperation != null) ||
       currentOperation instanceof ActiveOperation
