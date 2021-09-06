@@ -1,6 +1,6 @@
 import Operation from './operation.js';
 
-class PencilDraw extends Operation {
+class DrawPencil extends Operation {
   /**
    * Creates an instance of ArrowOperation.
    *
@@ -167,4 +167,4 @@ class PencilDraw extends Operation {
   }
 }
 
-export default PencilDraw;
+export default DrawPencil;

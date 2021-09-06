@@ -8,7 +8,7 @@ import DrawArrow from './operations/draw-arrow.js';
 import DrawLine from './operations/draw-line.js';
 import DrawRectangle from './operations/draw-rectangle.js';
 import Operation from './operations/operation.js';
-import PencilDraw from './operations/pencil-draw.js';
+import DrawPencil from './operations/draw-pencil.js';
 
 function getSelectedOperation() {
   switch (
@@ -16,7 +16,7 @@ function getSelectedOperation() {
       .value
   ) {
     case 'Pencil':
-      return PencilDraw;
+      return DrawPencil;
     case 'Line':
       return DrawLine;
     case 'Arrow':
