@@ -13,6 +13,17 @@ class Operation {
     this.operationHistory = operationHistory;
     /** @type {import('../cartesian-graph.js').default} */
     this.cartesianGraph = cartesianGraph;
+
+    this.bounds = {
+      min: {
+        x: Number.POSITIVE_INFINITY,
+        y: Number.POSITIVE_INFINITY,
+      },
+      max: {
+        x: Number.NEGATIVE_INFINITY,
+        y: Number.NEGATIVE_INFINITY,
+      },
+    };
   }
 
   onMousedown() {}
