@@ -43,7 +43,7 @@ class DrawPencil extends Operation {
 
     if (
       dist >
-      1 * (this.cartesianGraph.baseScale / this.cartesianGraph.scale)
+      0.5 * (this.cartesianGraph.baseScale / this.cartesianGraph.scale)
     ) {
       if (!input.isWheelMouseDown) {
         this.vertices.push({
