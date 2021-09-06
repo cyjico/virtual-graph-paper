@@ -32,6 +32,25 @@ function getSelectedOperation() {
   }
 }
 
+function constructEnvironment(env) {
+  const gridSnappingElement = document.getElementById('snap--grid');
+  gridSnappingElement.addEventListener('change', (e) => {
+    env.isGridSnapping = e.target.checked;
+  });
+
+  env.isGridSnapping = gridSnappingElement.checked;
+
+  const strokeWidthElement =
+    document.getElementById('stroke-picker').children[1];
+  strokeWidthElement.addEventListener('change', (e) => {
+    env.strokeWidth = parseFloat(e.target.value);
+  });
+
+  env.strokeWidth = parseFloat(strokeWidthElement.value);
+
+  return env;
+}
+
 window.addEventListener('load', () => {
   const statusBar = {
     coordsElement: document.getElementById('status-bar__coords'),
@@ -91,31 +110,25 @@ window.addEventListener('load', () => {
   /**
    * @type {{
    *   get isDegreeSnapping: boolean,
-   *   get isGridSnapping: boolean,
-   *   get strokeWidth: number,
+   *   isGridSnapping: boolean,
+   *   strokeWidth: number,
    *   get foregroundColor: number,
    *   get backgroundColor: number,
    * }}
    */
-  const env = {
+  const env = constructEnvironment({
     get isDegreeSnapping() {
       return document.getElementById('snap--deg').checked;
     },
-    get isGridSnapping() {
-      return document.getElementById('snap--grid').checked;
-    },
-    get strokeWidth() {
-      return parseFloat(
-        document.getElementById('stroke-picker').children[1].value
-      );
-    },
+    isGridSnapping: false,
+    strokeWidth: 0,
     get foregroundColor() {
       return document.getElementById('foreground-color').value;
     },
     get backgroundColor() {
       return document.getElementById('background-color').value;
     },
-  };
+  });
 
   document.addEventListener('keydown', (e) => {
     if (!input.keys.includes(e.key)) {
