@@ -175,7 +175,6 @@ class DrawText extends ActiveOperation {
 
   render() {
     const context = this.operationHistory.context;
-    const scalar = this.cartesianGraph.scale / this.cartesianGraph.baseScale;
 
     context.textAlign = 'left';
     context.textBaseline = 'top';
