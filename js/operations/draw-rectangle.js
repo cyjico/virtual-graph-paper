@@ -53,12 +53,13 @@ class DrawRectangle extends Operation {
     context.closePath();
 
     context.fillStyle = this.backgroundColor;
-    context.strokeStyle = this.foregroundColor;
-    context.lineWidth =
-      this.strokeWidth *
-      (this.cartesianGraph.scale / this.cartesianGraph.baseScale);
-    context.stroke();
     context.fill();
+
+    if (this.strokeWidth > 0) {
+      context.strokeStyle = this.foregroundColor;
+      context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
+      context.stroke();
+    }
   }
 }
 

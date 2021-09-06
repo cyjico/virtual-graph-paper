@@ -97,9 +97,7 @@ class DrawArc extends Operation {
     );
 
     context.strokeStyle = this.foregroundColor;
-    context.lineWidth =
-      this.strokeWidth *
-      (this.cartesianGraph.scale / this.cartesianGraph.baseScale);
+    context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
     context.stroke();
   }
 }

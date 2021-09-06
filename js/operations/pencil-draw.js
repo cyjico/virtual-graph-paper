@@ -19,30 +19,36 @@ class PencilDraw extends Operation {
   onMousedown({ input, env }) {
     this.foregroundColor = env.foregroundColor;
     this.strokeWidth = env.strokeWidth;
-    this.vertices.push([
-      input.relativeCursorPosition.x,
-      input.relativeCursorPosition.y,
-    ]);
+    this.vertices.push({
+      x: input.relativeCursorPosition.x,
+      y: input.relativeCursorPosition.y,
+    });
   }
 
   onMousemove({ input }) {
     const dist =
       Math.pow(
         input.relativeCursorPosition.x -
-          this.vertices[this.vertices.length - 1][0],
+          this.vertices[this.vertices.length - 1].x,
         2
       ) +
       Math.pow(
         input.relativeCursorPosition.y -
-          this.vertices[this.vertices.length - 1][1],
+          this.vertices[this.vertices.length - 1].y,
         2
       );
-    if (dist > 0.25 * 0.25 * this.strokeWidth) {
+
+    if (
+      dist >
+      3 * (this.cartesianGraph.baseScale / this.cartesianGraph.scale)
+    ) {
+      this.cursorDistanceTraveled -= this.strokeWidth * this.strokeWidth;
+
       if (!input.isWheelMouseDown) {
-        this.vertices.push([
-          input.relativeCursorPosition.x,
-          input.relativeCursorPosition.y,
-        ]);
+        this.vertices.push({
+          x: input.relativeCursorPosition.x,
+          y: input.relativeCursorPosition.y,
+        });
       }
 
       this.operationHistory.render();
@@ -55,13 +61,29 @@ class PencilDraw extends Operation {
     if (this.vertices.length > 0) {
       context.beginPath();
       context.moveTo(
-        this.cartesianGraph.scaleUpX(this.vertices[0][0]),
-        this.cartesianGraph.scaleUpY(this.vertices[0][1])
+        this.cartesianGraph.scaleUpX(this.vertices[0].x),
+        this.cartesianGraph.scaleUpY(this.vertices[0].y)
       );
-      for (let i = 1; i < this.vertices.length; i++) {
-        context.lineTo(
-          this.cartesianGraph.scaleUpX(this.vertices[i][0]),
-          this.cartesianGraph.scaleUpY(this.vertices[i][1])
+
+      let i;
+      for (i = 1; i < this.vertices.length - 2; i++) {
+        const xc = (this.vertices[i].x + this.vertices[i + 1].x) / 2;
+        const yc = (this.vertices[i].y + this.vertices[i + 1].y) / 2;
+
+        context.quadraticCurveTo(
+          this.cartesianGraph.scaleUpX(this.vertices[i].x),
+          this.cartesianGraph.scaleUpY(this.vertices[i].y),
+          this.cartesianGraph.scaleUpX(xc),
+          this.cartesianGraph.scaleUpY(yc)
+        );
+      }
+
+      if (this.vertices.length > 3) {
+        context.quadraticCurveTo(
+          this.cartesianGraph.scaleUpX(this.vertices[i].x),
+          this.cartesianGraph.scaleUpY(this.vertices[i].y),
+          this.cartesianGraph.scaleUpX(this.vertices[i + 1].x),
+          this.cartesianGraph.scaleUpY(this.vertices[i + 1].y)
         );
       }
 
@@ -69,9 +91,7 @@ class PencilDraw extends Operation {
 
       context.lineCap = 'round';
       context.strokeStyle = this.foregroundColor;
-      context.lineWidth =
-        this.strokeWidth *
-        (this.cartesianGraph.scale / this.cartesianGraph.baseScale);
+      context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
       context.stroke();
 
       context.restore();

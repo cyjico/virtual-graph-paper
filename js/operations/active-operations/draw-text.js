@@ -180,14 +180,16 @@ class DrawText extends ActiveOperation {
     context.textAlign = 'left';
     context.textBaseline = 'top';
     context.fillStyle = this.foregroundColor;
-    context.font = `${10 * scalar * this.strokeWidth * 0.75}px sans-serif`;
+    context.font = `${
+      10 * this.cartesianGraph.scale * this.strokeWidth * 0.75
+    }px sans-serif`;
 
     for (let i = 0; i < this.text.length; i++) {
       context.fillText(
         this.text[i],
         this.cartesianGraph.scaleUpX(this.x),
         this.cartesianGraph.scaleUpY(
-          this.y + i * scalar * this.strokeWidth * 0.5
+          this.y + i * this.cartesianGraph.scale * this.strokeWidth * 0.5
         )
       );
     }
@@ -207,9 +209,7 @@ class DrawText extends ActiveOperation {
       );
       context.lineTo(
         this.cartesianGraph.scaleUpX(this.x) + metrics.width,
-        this.cartesianGraph.scaleUpY(
-          this.y + this.textPos.y + this.strokeWidth * 0.5
-        )
+        this.cartesianGraph.scaleUpY(this.y + this.textPos.y + this.strokeWidth)
       );
       context.strokeStyle = '#000000';
       context.stroke();

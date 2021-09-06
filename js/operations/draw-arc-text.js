@@ -92,9 +92,7 @@ class DrawArcText extends DrawArc {
           context.lineTo(radius, radius * sign);
           context.lineTo(radius, 0);
           context.strokeStyle = this.foregroundColor;
-          context.lineWidth =
-            this.strokeWidth *
-            (this.cartesianGraph.scale / this.cartesianGraph.baseScale);
+          context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
           context.stroke();
 
           context.setTransform(1, 0, 0, 1, 0, 0);
@@ -111,10 +109,7 @@ class DrawArcText extends DrawArc {
     context.textBaseline = 'middle';
     context.fillStyle = this.backgroundColor;
     context.font = `${
-      10 *
-      (this.cartesianGraph.scale / this.cartesianGraph.baseScale) *
-      this.strokeWidth *
-      0.75
+      10 * this.cartesianGraph.scale * this.strokeWidth * 0.75
     }px sans-serif`;
     context.fillText(
       this.text,

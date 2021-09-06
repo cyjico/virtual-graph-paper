@@ -58,7 +58,7 @@ class DrawArrow extends Operation {
     headingRad += Math.PI;
     const rad45 = 45 * (Math.PI / 180);
 
-    const scalar = this.strokeWidth * 0.5;
+    const scalar = this.strokeWidth * 3;
     this.left.x = Math.cos(headingRad + rad45) * scalar + this.end.x;
     this.left.y = Math.sin(headingRad + rad45) * scalar + this.end.y;
     this.right.x = Math.cos(headingRad - rad45) * scalar + this.end.x;
@@ -92,9 +92,7 @@ class DrawArrow extends Operation {
     );
     context.lineCap = 'round';
     context.strokeStyle = this.foregroundColor;
-    context.lineWidth =
-      this.strokeWidth *
-      (this.cartesianGraph.scale / this.cartesianGraph.baseScale);
+    context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
     context.stroke();
 
     context.restore();
