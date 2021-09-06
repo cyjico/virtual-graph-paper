@@ -25,12 +25,12 @@ class ActiveOperation extends Operation {
   /**
    * Creates an instance of ActiveOperation.
    *
-   * @param {import('../operation-manager/operation-manager.js').default} operationHistory
+   * @param {import('../operation-manager/operation-manager.js').default} operationManager
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof Operation
    */
-  constructor(operationHistory, cartesianGraph) {
-    super(operationHistory, cartesianGraph);
+  constructor(operationManager, cartesianGraph) {
+    super(operationManager, cartesianGraph);
   }
 
   onDisable() {}

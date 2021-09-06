@@ -1,4 +1,4 @@
-class OperationHistory {
+class OperationManager {
   /** @type {import('../operations/operation.js').default[]} */
   #operations = [];
   #travelIndex = 0;
@@ -63,4 +63,4 @@ class OperationHistory {
   }
 }
 
-export default OperationHistory;
+export default OperationManager;

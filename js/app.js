@@ -1,5 +1,5 @@
 import CartesianGraph from './cartesian-graph.js';
-import OperationHistory from './operation-manager/operation-manager.js';
+import OperationManager from './operation-manager/operation-manager.js';
 import ActiveOperation from './active-operations/active-operation.js';
 import DrawText from './active-operations/draw-text.js';
 import DrawArcText from './operations/draw-arc-text.js';
@@ -57,7 +57,7 @@ window.addEventListener('load', () => {
     messageElement: document.getElementById('status-bar__message'),
   };
   const viewportElement = document.getElementById('viewport');
-  const operationHistory = new OperationHistory(viewportElement);
+  const operationManager = new OperationManager(viewportElement);
   const cartesianGraph = new CartesianGraph(viewportElement);
   /** @type {import('./operations/operation.js').default|import('./operations/active-operations/active-operation.js').default} */
   let currentOperation = null;
@@ -78,7 +78,7 @@ window.addEventListener('load', () => {
 
         if (currentOperation instanceof ActiveOperation) {
           currentOperation.active = false;
-          operationHistory.addOperation(currentOperation);
+          operationManager.addOperation(currentOperation);
         }
 
         currentOperation = null;
@@ -90,10 +90,10 @@ window.addEventListener('load', () => {
       '#right-panel .button-set input[type="button"]'
     );
     buttons[0].addEventListener('click', () => {
-      operationHistory.undoOperation();
+      operationManager.undoOperation();
     });
     buttons[1].addEventListener('click', () => {
-      operationHistory.redoOperation();
+      operationManager.redoOperation();
     });
   }
 
@@ -143,13 +143,13 @@ window.addEventListener('load', () => {
     // Undo and redo for history.
     if (input.keys[0] == 'Control') {
       if (input.keys.length == 2 && input.keys[1].toUpperCase() == 'Z') {
-        operationHistory.undoOperation();
+        operationManager.undoOperation();
       } else if (
         input.keys.length == 3 &&
         input.keys[1] == 'Shift' &&
         input.keys[2].toUpperCase() == 'Z'
       ) {
-        operationHistory.redoOperation();
+        operationManager.redoOperation();
       }
     }
   });
@@ -172,13 +172,13 @@ window.addEventListener('load', () => {
     if (input.isLeftMouseDown) {
       if (currentOperation instanceof ActiveOperation) {
         currentOperation.active = false;
-        operationHistory.addOperation(currentOperation);
+        operationManager.addOperation(currentOperation);
         currentOperation = null;
       }
 
       if (currentOperation == null) {
         currentOperation = new (getSelectedOperation())(
-          operationHistory,
+          operationManager,
           cartesianGraph
         );
         currentOperation.onMousedown({ e, input, env });
@@ -194,7 +194,7 @@ window.addEventListener('load', () => {
     if (input.isWheelMouseDown) {
       cartesianGraph.offset.x -= (input.relativeCursorPosition.x - rx) * 0.5;
       cartesianGraph.offset.y -= (input.relativeCursorPosition.y - ry) * 0.5;
-      operationHistory.render();
+      operationManager.render();
       cartesianGraph.render();
     }
 
@@ -226,7 +226,7 @@ window.addEventListener('load', () => {
       currentOperation.onMouseup({ e, input, env });
 
       if (!(currentOperation instanceof ActiveOperation)) {
-        operationHistory.addOperation(currentOperation);
+        operationManager.addOperation(currentOperation);
         currentOperation = null;
       }
     }
@@ -247,7 +247,7 @@ window.addEventListener('load', () => {
       );
 
       cartesianGraph.render();
-      operationHistory.render();
+      operationManager.render();
     },
     { passive: true }
   );

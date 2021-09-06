@@ -4,12 +4,12 @@ class DrawPencil extends Operation {
   /**
    * Creates an instance of ArrowOperation.
    *
-   * @param {import('../operation-manager/operation-manager.js').default} operationHistory
+   * @param {import('../operation-manager/operation-manager.js').default} operationManager
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof ArrowOperation
    */
-  constructor(operationHistory, cartesianGraph) {
-    super(operationHistory, cartesianGraph);
+  constructor(operationManager, cartesianGraph) {
+    super(operationManager, cartesianGraph);
 
     this.vertices = [];
     /** @type {null|HTMLImageElement} */
@@ -52,8 +52,8 @@ class DrawPencil extends Operation {
         });
       }
 
-      this.operationHistory.render();
-      this.renderVertices(this.operationHistory.context);
+      this.operationManager.render();
+      this.renderVertices(this.operationManager.context);
     }
   }
 
@@ -147,12 +147,12 @@ class DrawPencil extends Operation {
 
   render() {
     if (this.vertices.length > 0) {
-      this.renderVertices(this.operationHistory.context);
+      this.renderVertices(this.operationManager.context);
     } else if (
       this.cachedDrawing.complete &&
       this.cachedDrawing.src.length > 0
     ) {
-      const context = this.operationHistory.context;
+      const context = this.operationManager.context;
       const minX = this.cartesianGraph.scaleUpX(this.bounds.min.x);
       const minY = this.cartesianGraph.scaleUpY(this.bounds.min.y);
 

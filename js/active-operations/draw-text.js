@@ -18,12 +18,12 @@ class DrawText extends ActiveOperation {
   /**
    * Creates an instance of DrawText.
    *
-   * @param {import('../operation-manager/operation-manager.js').default} operationHistory
+   * @param {import('../operation-manager/operation-manager.js').default} operationManager
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof DrawText
    */
-  constructor(operationHistory, cartesianGraph) {
-    super(operationHistory, cartesianGraph);
+  constructor(operationManager, cartesianGraph) {
+    super(operationManager, cartesianGraph);
 
     this._enableDrawIndicator = true;
 
@@ -158,7 +158,7 @@ class DrawText extends ActiveOperation {
         }
       }
 
-      this.operationHistory.render();
+      this.operationManager.render();
 
       if (this.active) {
         this.renderIndicator();
@@ -169,12 +169,12 @@ class DrawText extends ActiveOperation {
   }
 
   onDisable() {
-    this.operationHistory.render();
+    this.operationManager.render();
     this.render();
   }
 
   render() {
-    const context = this.operationHistory.context;
+    const context = this.operationManager.context;
 
     context.textAlign = 'left';
     context.textBaseline = 'top';
@@ -196,7 +196,7 @@ class DrawText extends ActiveOperation {
 
   renderIndicator() {
     if (this._enableDrawIndicator) {
-      const context = this.operationHistory.context;
+      const context = this.operationManager.context;
       const metrics = context.measureText(
         this.text[this.textPos.y].slice(0, this.textPos.x)
       );
