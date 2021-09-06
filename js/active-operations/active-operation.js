@@ -1,4 +1,4 @@
-import Operation from '../operation.js';
+import Operation from '../operations/operation.js';
 
 /**
  * A type of operation that requires the user to manually disable. The operation
@@ -25,8 +25,8 @@ class ActiveOperation extends Operation {
   /**
    * Creates an instance of ActiveOperation.
    *
-   * @param {import('../../operation-history.js').default} operationHistory
-   * @param {import('../../cartesian-graph.js').default} cartesianGraph
+   * @param {import('../operation-history.js').default} operationHistory
+   * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof Operation
    */
   constructor(operationHistory, cartesianGraph) {
