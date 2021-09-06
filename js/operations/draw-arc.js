@@ -1,5 +1,7 @@
 import Operation from './operation.js';
 
+const RAD_15 = 15 * (Math.PI / 180);
+
 class DrawArc extends Operation {
   static statusMessage =
     '[LMB] to draw | [Q] to set starting degree | [E] to switch clockwise';
@@ -40,8 +42,7 @@ class DrawArc extends Operation {
     this.radius = Math.sqrt(x * x + y * y);
 
     if (env.isDegreeSnapping) {
-      const rad15 = 15 * (Math.PI / 180);
-      this.endRad = Math.round(Math.atan2(y, x) / rad15) * rad15;
+      this.endRad = Math.round(Math.atan2(y, x) / RAD_15) * RAD_15;
     } else {
       this.endRad = Math.atan2(y, x);
     }
@@ -67,8 +68,7 @@ class DrawArc extends Operation {
           );
 
           if (env.isDegreeSnapping) {
-            const rad15 = 15 * (Math.PI / 180);
-            this.startRad = Math.round(this.startRad / rad15) * rad15;
+            this.startRad = Math.round(this.startRad / RAD_15) * RAD_15;
           }
 
           this.operationHistory.render();

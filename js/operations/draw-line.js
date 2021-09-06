@@ -1,5 +1,7 @@
 import Operation from './operation.js';
 
+const RAD_15 = 15 * (Math.PI / 180);
+
 class DrawLine extends Operation {
   /**
    * Creates an instance of ArrowOperation.
@@ -32,11 +34,10 @@ class DrawLine extends Operation {
 
   onMousemove({ input, env }) {
     if (env.isDegreeSnapping) {
-      const rad = 15 * (Math.PI / 180);
-
       const headingX = input.relativeCursorPosition.x - this.start.x;
       const headingY = input.relativeCursorPosition.y - this.start.y;
-      const headingRad = Math.round(Math.atan2(headingY, headingX) / rad) * rad;
+      const headingRad =
+        Math.round(Math.atan2(headingY, headingX) / RAD_15) * RAD_15;
       const headingMag = Math.sqrt(headingX * headingX + headingY * headingY);
 
       this.end.x = Math.cos(headingRad) * headingMag + this.start.x;

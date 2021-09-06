@@ -1,5 +1,8 @@
 import Operation from './operation.js';
 
+const RAD_15 = 15 * (Math.PI / 180);
+const RAD_45 = 45 * (Math.PI / 180);
+
 class DrawArrow extends Operation {
   /**
    * Creates an instance of ArrowOperation.
@@ -44,8 +47,7 @@ class DrawArrow extends Operation {
     let headingRad = Math.atan2(headingY, headingX);
 
     if (env.isDegreeSnapping) {
-      const rad15 = 15 * (Math.PI / 180);
-      headingRad = Math.round(headingRad / rad15) * rad15;
+      headingRad = Math.round(headingRad / RAD_15) * RAD_15;
       const headingMag = Math.sqrt(headingX * headingX + headingY * headingY);
 
       this.end.x = Math.cos(headingRad) * headingMag + this.start.x;
@@ -55,14 +57,12 @@ class DrawArrow extends Operation {
       this.end.y = input.relativeCursorPosition.y;
     }
 
-    headingRad += Math.PI;
-    const rad45 = 45 * (Math.PI / 180);
-
     const scalar = this.strokeWidth * 3;
-    this.left.x = Math.cos(headingRad + rad45) * scalar + this.end.x;
-    this.left.y = Math.sin(headingRad + rad45) * scalar + this.end.y;
-    this.right.x = Math.cos(headingRad - rad45) * scalar + this.end.x;
-    this.right.y = Math.sin(headingRad - rad45) * scalar + this.end.y;
+    headingRad += Math.PI;
+    this.left.x = Math.cos(headingRad + RAD_45) * scalar + this.end.x;
+    this.left.y = Math.sin(headingRad + RAD_45) * scalar + this.end.y;
+    this.right.x = Math.cos(headingRad - RAD_45) * scalar + this.end.x;
+    this.right.y = Math.sin(headingRad - RAD_45) * scalar + this.end.y;
 
     this.operationHistory.render();
     this.render();
