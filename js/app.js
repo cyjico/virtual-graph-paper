@@ -32,6 +32,17 @@ function getSelectedOperation() {
   }
 }
 
+/**
+ *
+ * @param {any} env
+ * @return {{
+ *   get isDegreeSnapping: boolean,
+ *   isGridSnapping: boolean,
+ *   strokeWidth: number,
+ *   get foregroundColor: number,
+ *   get backgroundColor: number,
+ * }}
+ */
 function constructEnvironment(env) {
   const gridSnappingElement = document.getElementById('snap--grid');
   gridSnappingElement.addEventListener('change', (e) => {
@@ -107,15 +118,6 @@ window.addEventListener('load', () => {
     keys: [],
   };
 
-  /**
-   * @type {{
-   *   get isDegreeSnapping: boolean,
-   *   isGridSnapping: boolean,
-   *   strokeWidth: number,
-   *   get foregroundColor: number,
-   *   get backgroundColor: number,
-   * }}
-   */
   const env = constructEnvironment({
     get isDegreeSnapping() {
       return document.getElementById('snap--deg').checked;
