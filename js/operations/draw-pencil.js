@@ -4,7 +4,7 @@ class DrawPencil extends Operation {
   /**
    * Creates an instance of ArrowOperation.
    *
-   * @param {import('../operations-manager.js').default} operationHistory
+   * @param {import('../operation-manager/operation-manager.js').default} operationHistory
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof ArrowOperation
    */

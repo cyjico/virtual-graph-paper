@@ -1,5 +1,5 @@
 import CartesianGraph from './cartesian-graph.js';
-import OperationHistory from './operations-manager.js';
+import OperationHistory from './operation-manager/operation-manager.js';
 import ActiveOperation from './active-operations/active-operation.js';
 import DrawText from './active-operations/draw-text.js';
 import DrawArcText from './operations/draw-arc-text.js';

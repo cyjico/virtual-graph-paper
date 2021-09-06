@@ -1,5 +1,5 @@
 class OperationHistory {
-  /** @type {import('./operations/operation.js').default[]} */
+  /** @type {import('../operations/operation.js').default[]} */
   #operations = [];
   #travelIndex = 0;
 
@@ -20,7 +20,7 @@ class OperationHistory {
 
   /**
    *
-   * @param {import('./operations/operation.js').default} operation
+   * @param {import('../operations/operation.js').default} operation
    */
   addOperation(operation) {
     this.#operations.splice(this.#operations.length - this.#travelIndex);
