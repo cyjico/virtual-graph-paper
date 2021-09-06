@@ -40,10 +40,8 @@ class PencilDraw extends Operation {
 
     if (
       dist >
-      3 * (this.cartesianGraph.baseScale / this.cartesianGraph.scale)
+      1 * (this.cartesianGraph.baseScale / this.cartesianGraph.scale)
     ) {
-      this.cursorDistanceTraveled -= this.strokeWidth * this.strokeWidth;
-
       if (!input.isWheelMouseDown) {
         this.vertices.push({
           x: input.relativeCursorPosition.x,
