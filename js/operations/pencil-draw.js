@@ -12,6 +12,9 @@ class PencilDraw extends Operation {
     super(operationHistory, cartesianGraph);
 
     this.vertices = [];
+    /** @type {null|HTMLImageElement} */
+    this.cachedDrawing = null;
+
     this.foregroundColor = '';
     this.strokeWidth = 0;
   }
@@ -50,12 +53,58 @@ class PencilDraw extends Operation {
       }
 
       this.operationHistory.render();
-      this.render();
+      this.renderVertices(this.operationHistory.context);
     }
   }
 
-  render() {
-    const context = this.operationHistory.context;
+  #setBounds(x, y) {
+    if (x < this.bounds.min.x) {
+      this.bounds.min.x = x;
+    }
+
+    if (x > this.bounds.max.x) {
+      this.bounds.max.x = x;
+    }
+
+    if (y < this.bounds.min.y) {
+      this.bounds.min.y = y;
+    }
+
+    if (y > this.bounds.max.y) {
+      this.bounds.max.y = y;
+    }
+  }
+
+  onMouseup() {
+    for (let i = 0; i < this.vertices.length; i++) {
+      const vertex = this.vertices[i];
+
+      this.#setBounds(vertex.x, vertex.y);
+    }
+
+    this.bounds.min.x -= this.strokeWidth;
+    this.bounds.min.y -= this.strokeWidth;
+    this.bounds.max.x += this.strokeWidth;
+    this.bounds.max.y += this.strokeWidth;
+
+    const canvas = document.createElement('canvas');
+    const minX = this.cartesianGraph.scaleUpX(this.bounds.min.x);
+    const minY = this.cartesianGraph.scaleUpY(this.bounds.min.y);
+
+    canvas.width = this.cartesianGraph.scaleUpX(this.bounds.max.x) - minX;
+    canvas.height = this.cartesianGraph.scaleUpY(this.bounds.max.y) - minY;
+    const context = canvas.getContext('2d');
+
+    context.translate(-minX, -minY);
+    this.renderVertices(context);
+    this.cachedDrawing = new Image(canvas.width, canvas.height);
+    this.cachedDrawing.src = canvas
+      .toDataURL('image/png')
+      .replace('image/png', 'image/octet-stream');
+    this.vertices = [];
+  }
+
+  renderVertices(context) {
     if (this.vertices.length > 0) {
       context.beginPath();
       context.moveTo(
@@ -93,6 +142,27 @@ class PencilDraw extends Operation {
       context.stroke();
 
       context.restore();
+    }
+  }
+
+  render() {
+    if (this.vertices.length > 0) {
+      this.renderVertices(this.operationHistory.context);
+    } else if (
+      this.cachedDrawing.complete &&
+      this.cachedDrawing.src.length > 0
+    ) {
+      const context = this.operationHistory.context;
+      const minX = this.cartesianGraph.scaleUpX(this.bounds.min.x);
+      const minY = this.cartesianGraph.scaleUpY(this.bounds.min.y);
+
+      context.drawImage(
+        this.cachedDrawing,
+        minX,
+        minY,
+        this.cartesianGraph.scaleUpX(this.bounds.max.x) - minX,
+        this.cartesianGraph.scaleUpY(this.bounds.max.y) - minY
+      );
     }
   }
 }
