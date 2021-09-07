@@ -51,6 +51,41 @@ class DrawLine extends Operation {
     this.render();
   }
 
+  #setBounds(x, y) {
+    if (x < this.bounds.min.x) {
+      this.bounds.min.x = x;
+    }
+
+    if (x > this.bounds.max.x) {
+      this.bounds.max.x = x;
+    }
+
+    if (y < this.bounds.min.y) {
+      this.bounds.min.y = y;
+    }
+
+    if (y > this.bounds.max.y) {
+      this.bounds.max.y = y;
+    }
+  }
+
+  onMouseup() {
+    this.#setBounds(this.start.x, this.start.y);
+    this.#setBounds(this.end.x, this.end.y);
+
+    const halfWidth = this.strokeWidth / 2;
+    let headingX = this.start.x - this.end.x;
+    let headingY = this.start.y - this.end.y;
+    const headingMag = Math.sqrt(headingX * headingX + headingY * headingY);
+    headingX = Math.abs(headingX / headingMag);
+    headingY = Math.abs(headingY / headingMag);
+
+    this.bounds.min.x -= headingY * halfWidth;
+    this.bounds.min.y -= headingX * halfWidth;
+    this.bounds.max.x += headingY * halfWidth;
+    this.bounds.max.y += headingX * halfWidth;
+  }
+
   render() {
     const context = this.operationManager.context;
     context.beginPath();
