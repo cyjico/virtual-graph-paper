@@ -68,6 +68,48 @@ class DrawArrow extends Operation {
     this.render();
   }
 
+  #setBounds(x, y) {
+    if (x < this.bounds.min.x) {
+      this.bounds.min.x = x;
+    }
+
+    if (x > this.bounds.max.x) {
+      this.bounds.max.x = x;
+    }
+
+    if (y < this.bounds.min.y) {
+      this.bounds.min.y = y;
+    }
+
+    if (y > this.bounds.max.y) {
+      this.bounds.max.y = y;
+    }
+  }
+
+  onMouseup() {
+    this.#setBounds(this.start.x, this.start.y);
+    this.#setBounds(this.left.x, this.left.y);
+    this.#setBounds(this.right.x, this.right.y);
+
+    const halfWidth = this.strokeWidth / 2;
+    let headingX = this.start.x - this.end.x;
+    let headingY = this.start.y - this.end.y;
+    const headingMag = Math.sqrt(headingX * headingX + headingY * headingY);
+    headingX = headingX / headingMag;
+    headingY = headingY / headingMag;
+
+    const scalarWidth = this.strokeWidth * 0.2;
+    this.#setBounds(
+      this.end.x - headingX * scalarWidth,
+      this.end.y - headingY * scalarWidth
+    );
+
+    this.bounds.min.x -= halfWidth;
+    this.bounds.min.y -= halfWidth;
+    this.bounds.max.x += halfWidth;
+    this.bounds.max.y += halfWidth;
+  }
+
   render() {
     const context = this.operationManager.context;
     const ex = this.cartesianGraph.scaleUpX(this.end.x);
