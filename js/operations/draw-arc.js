@@ -9,7 +9,7 @@ class DrawArc extends Operation {
   /**
    * Creates an instance of DrawArc.
    *
-   * @param {import('../operation-manager/operation-manager.js').default} operationManager
+   * @param {import('../operation-manager.js').default} operationManager
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof DrawArc
    */

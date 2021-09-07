@@ -4,12 +4,12 @@ class Operation {
   /**
    * Creates an instance of Operation.
    *
-   * @param {import('../operation-manager/operation-manager.js').default} operationManager
+   * @param {import('../operation-manager.js').default} operationManager
    * @param {import('../cartesian-graph.js').default} cartesianGraph
    * @memberof Operation
    */
   constructor(operationManager, cartesianGraph) {
-    /** @type {import('../operation-manager/operation-manager.js').default} */
+    /** @type {import('../operation-manager.js').default} */
     this.operationManager = operationManager;
     /** @type {import('../cartesian-graph.js').default} */
     this.cartesianGraph = cartesianGraph;
