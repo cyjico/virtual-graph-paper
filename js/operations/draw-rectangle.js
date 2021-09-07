@@ -37,6 +37,35 @@ class DrawRectangle extends Operation {
     this.render();
   }
 
+  #setBounds(x, y) {
+    if (x < this.bounds.min.x) {
+      this.bounds.min.x = x;
+    }
+
+    if (x > this.bounds.max.x) {
+      this.bounds.max.x = x;
+    }
+
+    if (y < this.bounds.min.y) {
+      this.bounds.min.y = y;
+    }
+
+    if (y > this.bounds.max.y) {
+      this.bounds.max.y = y;
+    }
+  }
+
+  onMouseup() {
+    this.#setBounds(this.x, this.y);
+    this.#setBounds(this.x + this.width, this.y + this.height);
+
+    const halfWidth = this.strokeWidth / 2;
+    this.bounds.min.x -= halfWidth;
+    this.bounds.min.y -= halfWidth;
+    this.bounds.max.x += halfWidth;
+    this.bounds.max.y += halfWidth;
+  }
+
   render() {
     const context = this.operationManager.context;
 
