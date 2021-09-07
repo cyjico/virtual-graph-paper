@@ -1,30 +1,5 @@
 import DrawArc from './draw-arc.js';
 
-function drawBounds(self) {
-  const ctx = self.operationManager.context;
-  ctx.beginPath();
-  ctx.moveTo(
-    self.cartesianGraph.scaleUpX(self.bounds.min.x),
-    self.cartesianGraph.scaleUpY(self.bounds.min.y)
-  );
-  ctx.lineTo(
-    self.cartesianGraph.scaleUpX(self.bounds.max.x),
-    self.cartesianGraph.scaleUpY(self.bounds.min.y)
-  );
-  ctx.lineTo(
-    self.cartesianGraph.scaleUpX(self.bounds.max.x),
-    self.cartesianGraph.scaleUpY(self.bounds.max.y)
-  );
-  ctx.lineTo(
-    self.cartesianGraph.scaleUpX(self.bounds.min.x),
-    self.cartesianGraph.scaleUpY(self.bounds.max.y)
-  );
-  ctx.closePath();
-  ctx.strokeStyle = 'red';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-}
-
 class DrawArcText extends DrawArc {
   #isKeyDown = false;
 
@@ -111,8 +86,6 @@ class DrawArcText extends DrawArc {
       xHeading - halfWidth * Math.sign(headingCos),
       yHeading - halfWidth * Math.sign(headingSin)
     );
-
-    drawBounds(this);
   }
 
   onKeydown(args) {
