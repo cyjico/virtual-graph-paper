@@ -1,5 +1,30 @@
 import DrawArc from './draw-arc.js';
 
+function drawBounds(self) {
+  const ctx = self.operationManager.context;
+  ctx.beginPath();
+  ctx.moveTo(
+    self.cartesianGraph.scaleUpX(self.bounds.min.x),
+    self.cartesianGraph.scaleUpY(self.bounds.min.y)
+  );
+  ctx.lineTo(
+    self.cartesianGraph.scaleUpX(self.bounds.max.x),
+    self.cartesianGraph.scaleUpY(self.bounds.min.y)
+  );
+  ctx.lineTo(
+    self.cartesianGraph.scaleUpX(self.bounds.max.x),
+    self.cartesianGraph.scaleUpY(self.bounds.max.y)
+  );
+  ctx.lineTo(
+    self.cartesianGraph.scaleUpX(self.bounds.min.x),
+    self.cartesianGraph.scaleUpY(self.bounds.max.y)
+  );
+  ctx.closePath();
+  ctx.strokeStyle = 'red';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
 class DrawArcText extends DrawArc {
   #isKeyDown = false;
 
@@ -21,22 +46,6 @@ class DrawArcText extends DrawArc {
     this.backgroundColor = '#ffffff';
   }
 
-  /**
-   * Converts a number that ranges from `180 to -180` to `-360 to 360`.
-   *
-   * @param {number} rad
-   * @return {number}
-   */
-  #convertToRange(rad) {
-    if (this.counterClockwise && rad > 0) {
-      rad -= Math.PI * 2 * (1 + Math.floor(rad / (Math.PI * 2)));
-    } else if (!this.counterClockwise && rad < 0) {
-      rad += Math.PI * 2 * (1 + Math.floor(-rad / (Math.PI * 2)));
-    }
-
-    return rad;
-  }
-
   onMousedown(args) {
     super.onMousedown.call(this, args);
 
@@ -46,15 +55,64 @@ class DrawArcText extends DrawArc {
   onMousemove(args) {
     super.onMousemove.call(this, args, false);
 
-    const rangeRad = this.#convertToRange(this.endRad - this.startRad);
+    const rangeRad = this.convertToRange(this.endRad - this.startRad);
     this.text = `  ${Math.round(rangeRad * (180 / Math.PI) * -100) / 100}°`;
 
-    const headingRad = this.#convertToRange(this.startRad) + rangeRad / 2;
+    const headingRad = this.convertToRange(this.startRad) + rangeRad / 2;
     this.textOffset.x = Math.cos(headingRad);
     this.textOffset.y = Math.sin(headingRad);
 
     this.operationManager.render();
     this.render();
+  }
+
+  #setBounds(x, y) {
+    if (x < this.bounds.min.x) {
+      this.bounds.min.x = x;
+    }
+
+    if (x > this.bounds.max.x) {
+      this.bounds.max.x = x;
+    }
+
+    if (y < this.bounds.min.y) {
+      this.bounds.min.y = y;
+    }
+
+    if (y > this.bounds.max.y) {
+      this.bounds.max.y = y;
+    }
+  }
+
+  onMouseup() {
+    super.onMouseup.call(this);
+
+    const rangeRad = this.convertToRange(this.endRad - this.startRad);
+    const headingRad = this.convertToRange(this.startRad) + rangeRad / 2;
+    const headingCos = Math.cos(headingRad);
+    const headingSin = Math.sin(headingRad);
+
+    let scalar = 1.5;
+    if (this.text == '  -90°' || this.text == '  90°') {
+      scalar = 1.75;
+    }
+
+    const xHeading =
+      this.center.x + headingCos * this.radius * 10 * this.strokeWidth * scalar;
+    const yHeading =
+      this.center.y + headingSin * this.radius * 10 * this.strokeWidth * scalar;
+    const halfWidth = this.strokeWidth / 2;
+
+    this.#setBounds(
+      xHeading + halfWidth * Math.sign(headingCos),
+      yHeading + halfWidth * Math.sign(headingSin)
+    );
+    this.#setBounds(
+      xHeading - halfWidth * Math.sign(headingCos),
+      yHeading - halfWidth * Math.sign(headingSin)
+    );
+
+    drawBounds(this);
   }
 
   onKeydown(args) {
