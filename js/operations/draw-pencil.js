@@ -1,5 +1,11 @@
 import Operation from './operation.js';
 
+// Offset for taking account the anti-aliasing in caching images.
+const OFFSET_X = 5;
+const OFFSET_Y = 5;
+const OFFSET_HALF_X = OFFSET_X / 2;
+const OFFSET_HALF_Y = OFFSET_Y / 2;
+
 class DrawPencil extends Operation {
   /**
    * Creates an instance of ArrowOperation.
@@ -12,6 +18,8 @@ class DrawPencil extends Operation {
     super(operationManager, cartesianGraph);
 
     this.vertices = [];
+    /** @type {null|number} */
+    this.cachedScale = null;
     /** @type {null|HTMLImageElement} */
     this.cachedDrawing = null;
 
@@ -82,25 +90,30 @@ class DrawPencil extends Operation {
       this.#setBounds(vertex.x, vertex.y);
     }
 
-    this.bounds.min.x -= this.strokeWidth;
-    this.bounds.min.y -= this.strokeWidth;
-    this.bounds.max.x += this.strokeWidth;
-    this.bounds.max.y += this.strokeWidth;
+    const strokeWidth = this.strokeWidth * 0.5;
+    this.bounds.min.x -= strokeWidth;
+    this.bounds.min.y -= strokeWidth;
+    this.bounds.max.x += strokeWidth;
+    this.bounds.max.y += strokeWidth;
 
     const canvas = document.createElement('canvas');
     const minX = this.cartesianGraph.scaleUpX(this.bounds.min.x);
     const minY = this.cartesianGraph.scaleUpY(this.bounds.min.y);
 
-    canvas.width = this.cartesianGraph.scaleUpX(this.bounds.max.x) - minX;
-    canvas.height = this.cartesianGraph.scaleUpY(this.bounds.max.y) - minY;
+    canvas.width =
+      this.cartesianGraph.scaleUpX(this.bounds.max.x) - minX + OFFSET_X;
+    canvas.height =
+      this.cartesianGraph.scaleUpY(this.bounds.max.y) - minY + OFFSET_Y;
     const context = canvas.getContext('2d');
 
-    context.translate(-minX, -minY);
+    context.translate(-minX + OFFSET_HALF_X, -minY + OFFSET_HALF_Y);
     this.renderVertices(context);
+    this.cachedScale = this.cartesianGraph.scale;
     this.cachedDrawing = new Image(canvas.width, canvas.height);
     this.cachedDrawing.src = canvas
       .toDataURL('image/png')
       .replace('image/png', 'image/octet-stream');
+
     this.vertices = [];
   }
 
@@ -155,13 +168,18 @@ class DrawPencil extends Operation {
       const context = this.operationManager.context;
       const minX = this.cartesianGraph.scaleUpX(this.bounds.min.x);
       const minY = this.cartesianGraph.scaleUpY(this.bounds.min.y);
+      const scalar = this.cartesianGraph.scale / this.cachedScale;
 
       context.drawImage(
         this.cachedDrawing,
-        minX,
-        minY,
-        this.cartesianGraph.scaleUpX(this.bounds.max.x) - minX,
-        this.cartesianGraph.scaleUpY(this.bounds.max.y) - minY
+        minX - OFFSET_HALF_X * scalar,
+        minY - OFFSET_HALF_Y * scalar,
+        this.cartesianGraph.scaleUpX(this.bounds.max.x) -
+          minX +
+          OFFSET_X * scalar,
+        this.cartesianGraph.scaleUpY(this.bounds.max.y) -
+          minY +
+          OFFSET_Y * scalar
       );
     }
   }
