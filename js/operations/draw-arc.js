@@ -1,5 +1,11 @@
 import Operation from './operation.js';
 
+const RAD_CONSTANTS = [
+  90 * (Math.PI / 180),
+  180 * (Math.PI / 180),
+  270 * (Math.PI / 180),
+];
+
 const RAD_15 = 15 * (Math.PI / 180);
 
 class DrawArc extends Operation {
@@ -56,6 +62,89 @@ class DrawArc extends Operation {
       this.operationManager.render();
       this.render();
     }
+  }
+
+  #setBounds(x, y) {
+    if (x < this.bounds.min.x) {
+      this.bounds.min.x = x;
+    }
+
+    if (x > this.bounds.max.x) {
+      this.bounds.max.x = x;
+    }
+
+    if (y < this.bounds.min.y) {
+      this.bounds.min.y = y;
+    }
+
+    if (y > this.bounds.max.y) {
+      this.bounds.max.y = y;
+    }
+  }
+
+  /**
+   * Converts a number that ranges from `180 to -180` to `-360 to 360`.
+   *
+   * @param {number} rad
+   * @return {number}
+   */
+  convertToRange(rad) {
+    if (this.counterClockwise && rad > 0) {
+      rad -= Math.PI * 2 * (1 + Math.floor(rad / (Math.PI * 2)));
+    } else if (!this.counterClockwise && rad < 0) {
+      rad += Math.PI * 2 * (1 + Math.floor(-rad / (Math.PI * 2)));
+    }
+
+    return rad;
+  }
+
+  onMouseup() {
+    const rangeRad = this.convertToRange(this.endRad - this.startRad);
+    const halfWidth = this.strokeWidth / 2;
+
+    for (let i = 0; i < RAD_CONSTANTS.length; i++) {
+      const sign = this.counterClockwise ? -1 : 1;
+      const radConstant = this.startRad + RAD_CONSTANTS[i] * sign;
+
+      if (Math.abs(rangeRad) > RAD_CONSTANTS[i]) {
+        const cos = Math.cos(radConstant);
+        const sin = Math.sin(radConstant);
+
+        this.#setBounds(
+          this.center.x + cos * this.radius + halfWidth * Math.sign(cos),
+          this.center.y + sin * this.radius + halfWidth * Math.sign(sin)
+        );
+      }
+    }
+
+    const startCos = Math.cos(this.startRad);
+    const startSin = Math.sin(this.startRad);
+    const xStart = this.center.x + startCos * this.radius;
+    const yStart = this.center.y + startSin * this.radius;
+
+    this.#setBounds(
+      xStart + halfWidth * Math.sign(startCos),
+      yStart + halfWidth * Math.sign(startSin)
+    );
+    this.#setBounds(
+      xStart - halfWidth * Math.sign(startCos),
+      yStart - halfWidth * Math.sign(startSin)
+    );
+
+    const endRad = this.startRad + rangeRad;
+    const endCos = Math.cos(endRad);
+    const endSin = Math.sin(endRad);
+    const xEnd = this.center.x + endCos * this.radius;
+    const yEnd = this.center.y + endSin * this.radius;
+
+    this.#setBounds(
+      xEnd + halfWidth * Math.sign(endCos),
+      yEnd + halfWidth * Math.sign(endSin)
+    );
+    this.#setBounds(
+      xEnd - halfWidth * Math.sign(endCos),
+      yEnd - halfWidth * Math.sign(endSin)
+    );
   }
 
   onKeydown({ input, env }) {
