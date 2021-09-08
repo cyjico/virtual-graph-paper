@@ -109,6 +109,11 @@ window.addEventListener('load', () => {
     buttons[1].addEventListener('click', () => {
       operationManager.redoOperation();
     });
+    buttons[2].addEventListener('click', () => {
+      operationManager.saveOperation().then((blob) => {
+        saveAs(blob, 'Graph Paper.png');
+      });
+    });
   }
 
   const input = {
@@ -149,12 +154,14 @@ window.addEventListener('load', () => {
     if (input.keys[0] == 'Control') {
       if (input.keys.length == 2 && input.keys[1].toUpperCase() == 'Z') {
         operationManager.undoOperation();
+        e.preventDefault();
       } else if (
         input.keys.length == 3 &&
         input.keys[1] == 'Shift' &&
         input.keys[2].toUpperCase() == 'Z'
       ) {
         operationManager.redoOperation();
+        e.preventDefault();
       }
     }
   });
