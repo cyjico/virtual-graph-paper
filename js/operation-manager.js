@@ -57,7 +57,6 @@ class OperationManager {
 
   render() {
     const selfBounds = this.cartesianGraph.bounds;
-    let rendered = 0;
 
     this.context.clearRect(
       0,
@@ -75,7 +74,6 @@ class OperationManager {
         bounds.min.y < selfBounds.max.y &&
         bounds.max.y > selfBounds.min.y
       ) {
-        rendered += 1;
         this.#operations[i].render();
       }
     }
