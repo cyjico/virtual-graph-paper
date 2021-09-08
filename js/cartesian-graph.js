@@ -21,6 +21,23 @@ class CartesianGraph {
     this.scale = this.baseScale;
   }
 
+  get bounds() {
+    const canvas = this.context.canvas;
+    const halfWidth = canvas.width / 2 / this.scale;
+    const halfHeight = canvas.height / 2 / this.scale;
+
+    return {
+      min: {
+        x: -halfWidth - this.offset.x,
+        y: -halfHeight - this.offset.y,
+      },
+      max: {
+        x: halfWidth - this.offset.x,
+        y: halfHeight - this.offset.y,
+      },
+    };
+  }
+
   /**
    * Draws a vertical line according to scale.
    *

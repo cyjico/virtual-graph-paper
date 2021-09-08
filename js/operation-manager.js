@@ -7,15 +7,17 @@ class OperationManager {
    * Creates an instance of OperationOverlay.
    *
    * @param {HTMLElement} viewport
+   * @param {import('./cartesian-graph.js').default} cartesianGraph
    * @memberof OperationOverlay
    */
-  constructor(viewport) {
+  constructor(viewport, cartesianGraph) {
     const canvas = viewport.children[1];
     canvas.width = viewport.clientWidth;
     canvas.height = viewport.clientHeight;
 
     /** @type {CanvasRenderingContext2D} */
     this.context = canvas.getContext('2d');
+    this.cartesianGraph = cartesianGraph;
   }
 
   /**
@@ -54,11 +56,28 @@ class OperationManager {
   }
 
   render() {
-    const canvas = this.context.canvas;
-    this.context.clearRect(0, 0, canvas.width, canvas.height);
+    const selfBounds = this.cartesianGraph.bounds;
+    let rendered = 0;
+
+    this.context.clearRect(
+      0,
+      0,
+      this.context.canvas.width,
+      this.context.canvas.height
+    );
 
     for (let i = 0; i <= this.#operations.length - 1 - this.#travelIndex; i++) {
-      this.#operations[i].render();
+      const bounds = this.#operations[i].bounds;
+
+      if (
+        bounds.min.x < selfBounds.max.x &&
+        bounds.max.x > selfBounds.min.x &&
+        bounds.min.y < selfBounds.max.y &&
+        bounds.max.y > selfBounds.min.y
+      ) {
+        rendered += 1;
+        this.#operations[i].render();
+      }
     }
   }
 }

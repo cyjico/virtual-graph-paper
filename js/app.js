@@ -68,8 +68,11 @@ window.addEventListener('load', () => {
     messageElement: document.getElementById('status-bar__message'),
   };
   const viewportElement = document.getElementById('viewport');
-  const operationManager = new OperationManager(viewportElement);
   const cartesianGraph = new CartesianGraph(viewportElement);
+  const operationManager = new OperationManager(
+    viewportElement,
+    cartesianGraph
+  );
   /** @type {import('./operations/operation.js').default|import('./operations/active-operations/active-operation.js').default} */
   let currentOperation = null;
 
