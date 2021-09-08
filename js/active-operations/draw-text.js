@@ -170,6 +170,27 @@ class DrawText extends ActiveOperation {
   onDisable() {
     this.operationManager.render();
     this.render();
+
+    let longestLine = '';
+    for (let i = 0; i < this.text.length; i++) {
+      const line = this.text[i];
+
+      if (line.length > longestLine.length) {
+        longestLine = line;
+      }
+    }
+
+    const context = this.operationManager.context;
+    const metrics = context.measureText(longestLine);
+
+    this.bounds.min.x = this.x;
+    this.bounds.min.y = this.y;
+    this.bounds.max.x = this.x + metrics.width / this.cartesianGraph.scale;
+    this.bounds.max.y =
+      this.y +
+      this.text.length *
+        ((metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent) /
+          this.cartesianGraph.scale);
   }
 
   render() {
