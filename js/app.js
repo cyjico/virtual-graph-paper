@@ -109,6 +109,11 @@ window.addEventListener('load', () => {
     buttons[1].addEventListener('click', () => {
       operationManager.redoOperation();
     });
+    buttons[2].addEventListener('click', () => {
+      operationManager.saveOperation().then(() => {
+        console.log('Finished saving... please look at the network activity!');
+      });
+    });
   }
 
   const input = {

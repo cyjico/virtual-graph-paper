@@ -1,3 +1,22 @@
+/**
+ * Load an image using promises.
+ *
+ * @param {string} url
+ * @return {Promise<HTMLImageElement>}
+ */
+function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => {
+      resolve(image);
+    };
+    image.onerror = () => {
+      reject(image);
+    };
+    image.src = url;
+  });
+}
+
 class OperationManager {
   /** @type {import('./operations/operation.js').default[]} */
   #operations = [];
@@ -53,6 +72,98 @@ class OperationManager {
       this.#operations.length
     );
     this.render();
+  }
+
+  async saveOperation(onFinish) {
+    // Obtain bounds that encapsulates every operation.
+    const bounds = {
+      min: {
+        x: 0,
+        y: 0,
+      },
+      max: {
+        x: 0,
+        y: 0,
+      },
+    };
+
+    for (let i = 0; i < this.#operations.length; i++) {
+      const ops = this.#operations[i];
+
+      if (ops.bounds.min.x < bounds.min.x) {
+        bounds.min.x = ops.bounds.min.x;
+      }
+
+      if (ops.bounds.min.y < bounds.min.y) {
+        bounds.min.y = ops.bounds.min.y;
+      }
+
+      if (ops.bounds.max.x > bounds.max.x) {
+        bounds.max.x = ops.bounds.max.x;
+      }
+
+      if (ops.bounds.max.y > bounds.max.y) {
+        bounds.max.y = ops.bounds.max.y;
+      }
+    }
+
+    const cellWidth = this.context.canvas.width / this.cartesianGraph.scale;
+    const cellHeight = this.context.canvas.height / this.cartesianGraph.scale;
+
+    bounds.min.x =
+      Math.ceil(Math.abs(bounds.min.x) / cellWidth) *
+      cellWidth *
+      Math.sign(bounds.min.x);
+    bounds.max.x =
+      Math.ceil(Math.abs(bounds.max.x) / cellWidth) *
+      cellWidth *
+      Math.sign(bounds.max.x);
+
+    bounds.min.y =
+      Math.ceil(Math.abs(bounds.min.y) / cellHeight) *
+      cellHeight *
+      Math.sign(bounds.min.y);
+    bounds.max.y =
+      Math.ceil(Math.abs(bounds.max.y) / cellHeight) *
+      cellHeight *
+      Math.sign(bounds.max.y);
+
+    // Go through each cell and attempt to render.
+    const numColumns = (bounds.max.x - bounds.min.x) / cellWidth;
+    const numRows = (bounds.max.y - bounds.min.y) / cellHeight;
+
+    const stitchingCanvas = document.createElement('canvas');
+    stitchingCanvas.width = this.context.canvas.width * numColumns;
+    stitchingCanvas.height = this.context.canvas.height * numRows;
+    const stitchingContext = stitchingCanvas.getContext('2d', { alpha: true });
+
+    for (let y = 0; y < numRows; y++) {
+      for (let x = 0; x < numColumns; x++) {
+        const cellCenterX = bounds.min.x + cellWidth / 2 + cellWidth * x;
+        const cellCenterY = bounds.min.y + cellHeight / 2 + cellHeight * y;
+
+        this.cartesianGraph.offset.x = -cellCenterX;
+        this.cartesianGraph.offset.y = -cellCenterY;
+        this.cartesianGraph.render();
+        this.render();
+
+        // Each render will be stitched together.
+        const stitchX = x * this.context.canvas.width;
+        const stitchY = y * this.context.canvas.height;
+
+        const firstLayer = await loadImage(
+          this.cartesianGraph.context.canvas.toDataURL()
+        );
+        stitchingContext.drawImage(firstLayer, stitchX, stitchY);
+        const secondLayer = await loadImage(this.context.canvas.toDataURL());
+        stitchingContext.drawImage(secondLayer, stitchX, stitchY);
+        console.log(
+          `Loaded ${x + y * numColumns + 1} out of ${numRows * numColumns}`
+        );
+      }
+    }
+
+    return await loadImage(stitchingCanvas.toDataURL());
   }
 
   render() {
