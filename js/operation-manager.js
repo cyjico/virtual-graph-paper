@@ -17,6 +17,18 @@ function loadImage(url) {
   });
 }
 
+/**
+ * Get blob of canvas.
+ *
+ * @param {HTMLCanvasElement} canvas
+ * @return {Promise<Blob>}
+ */
+function getCanvasBlob(canvas) {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => resolve(blob));
+  });
+}
+
 class OperationManager {
   /** @type {import('./operations/operation.js').default[]} */
   #operations = [];
@@ -157,13 +169,10 @@ class OperationManager {
         stitchingContext.drawImage(firstLayer, stitchX, stitchY);
         const secondLayer = await loadImage(this.context.canvas.toDataURL());
         stitchingContext.drawImage(secondLayer, stitchX, stitchY);
-        console.log(
-          `Loaded ${x + y * numColumns + 1} out of ${numRows * numColumns}`
-        );
       }
     }
 
-    return await loadImage(stitchingCanvas.toDataURL());
+    return await getCanvasBlob(stitchingCanvas);
   }
 
   render() {

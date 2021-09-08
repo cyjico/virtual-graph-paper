@@ -110,8 +110,8 @@ window.addEventListener('load', () => {
       operationManager.redoOperation();
     });
     buttons[2].addEventListener('click', () => {
-      operationManager.saveOperation().then(() => {
-        console.log('Finished saving... please look at the network activity!');
+      operationManager.saveOperation().then((blob) => {
+        saveAs(blob, 'Graph Paper.png');
       });
     });
   }
