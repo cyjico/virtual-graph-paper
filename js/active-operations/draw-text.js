@@ -204,7 +204,6 @@ class DrawText extends ActiveOperation {
     }px sans-serif`;
 
     const metrics = context.measureText('');
-
     for (let i = 0; i < this.text.length; i++) {
       context.fillText(
         this.text[i],
