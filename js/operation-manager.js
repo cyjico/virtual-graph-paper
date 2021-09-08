@@ -56,7 +56,7 @@ class OperationManager {
   }
 
   render() {
-    const selfBounds = this.cartesianGraph.bounds;
+    const viewportBounds = this.cartesianGraph.viewportBounds;
 
     this.context.clearRect(
       0,
@@ -69,10 +69,10 @@ class OperationManager {
       const bounds = this.#operations[i].bounds;
 
       if (
-        bounds.min.x < selfBounds.max.x &&
-        bounds.max.x > selfBounds.min.x &&
-        bounds.min.y < selfBounds.max.y &&
-        bounds.max.y > selfBounds.min.y
+        bounds.min.x < viewportBounds.max.x &&
+        bounds.max.x > viewportBounds.min.x &&
+        bounds.min.y < viewportBounds.max.y &&
+        bounds.max.y > viewportBounds.min.y
       ) {
         this.#operations[i].render();
       }

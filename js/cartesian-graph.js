@@ -21,7 +21,7 @@ class CartesianGraph {
     this.scale = this.baseScale;
   }
 
-  get bounds() {
+  get viewportBounds() {
     const canvas = this.context.canvas;
     const halfWidth = canvas.width / 2 / this.scale;
     const halfHeight = canvas.height / 2 / this.scale;
