@@ -159,12 +159,11 @@ class DrawText extends ActiveOperation {
       }
 
       this.operationManager.render();
+      this.render();
 
       if (this.active) {
         this.renderIndicator();
       }
-
-      this.render();
     }
   }
 
@@ -183,13 +182,14 @@ class DrawText extends ActiveOperation {
       10 * this.cartesianGraph.scale * this.strokeWidth * 0.75
     }px sans-serif`;
 
+    const metrics = context.measureText('');
+
     for (let i = 0; i < this.text.length; i++) {
       context.fillText(
         this.text[i],
         this.cartesianGraph.scaleUpX(this.x),
-        this.cartesianGraph.scaleUpY(
-          this.y + i * this.cartesianGraph.scale * this.strokeWidth * 0.5
-        )
+        this.cartesianGraph.scaleUpY(this.y) +
+          i * (metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent)
       );
     }
   }
@@ -200,19 +200,17 @@ class DrawText extends ActiveOperation {
       const metrics = context.measureText(
         this.text[this.textPos.y].slice(0, this.textPos.x)
       );
+      const textHeight =
+        metrics.fontBoundingBoxDescent + metrics.fontBoundingBoxAscent;
 
       context.beginPath();
       context.moveTo(
         this.cartesianGraph.scaleUpX(this.x) + metrics.width,
-        this.cartesianGraph.scaleUpY(this.y + this.textPos.y)
+        this.cartesianGraph.scaleUpY(this.y) + this.textPos.y * textHeight
       );
       context.lineTo(
         this.cartesianGraph.scaleUpX(this.x) + metrics.width,
-        this.cartesianGraph.scaleUpY(
-          this.y +
-            this.textPos.y +
-            this.cartesianGraph.scale * this.strokeWidth * 0.5
-        )
+        this.cartesianGraph.scaleUpY(this.y) + (this.textPos.y + 1) * textHeight
       );
       context.strokeStyle = '#000000';
       context.stroke();
