@@ -86,7 +86,7 @@ class OperationManager {
     this.render();
   }
 
-  async saveOperation(onFinish) {
+  async saveOperation() {
     // Obtain bounds that encapsulates every operation.
     const bounds = {
       min: {
