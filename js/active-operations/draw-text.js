@@ -233,6 +233,7 @@ class DrawText extends ActiveOperation {
         this.cartesianGraph.scaleUpY(this.y) + (this.textPos.y + 1) * textHeight
       );
       context.strokeStyle = '#000';
+      context.lineWidth = this.strokeWidth * this.cartesianGraph.scale * 0.75;
       context.stroke();
     }
   }
