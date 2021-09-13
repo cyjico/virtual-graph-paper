@@ -110,7 +110,7 @@ window.addEventListener('load', () => {
       operationManager.redoOperation();
     });
     buttons[2].addEventListener('click', () => {
-      operationManager.saveOperation().then((blob) => {
+      operationManager.saveOperation(720, 720, 50).then((blob) => {
         saveAs(blob, 'Graph Paper.png');
       });
     });

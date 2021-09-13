@@ -86,7 +86,27 @@ class OperationManager {
     this.render();
   }
 
-  async saveOperation() {
+  async saveOperation(width, height, scale) {
+    const firstCanvas = this.cartesianGraph.context.canvas;
+    const secondCanvas = this.context.canvas;
+    const initial = {
+      width: firstCanvas.width,
+      height: firstCanvas.height,
+      scale: this.cartesianGraph.scale,
+      markerLine: this.cartesianGraph.markerLine,
+    };
+
+    // Set resolution and scale.
+    firstCanvas.width = width;
+    firstCanvas.height = height;
+    this.cartesianGraph.context = firstCanvas.getContext('2d');
+    secondCanvas.width = width;
+    secondCanvas.height = height;
+    this.context = secondCanvas.getContext('2d');
+    this.cartesianGraph.scale = scale;
+    this.cartesianGraph.markerLine =
+      initial.markerLine * (scale / this.cartesianGraph.baseScale);
+
     // Obtain bounds that encapsulates every operation.
     const bounds = {
       min: {
@@ -119,8 +139,8 @@ class OperationManager {
       }
     }
 
-    const cellWidth = this.context.canvas.width / this.cartesianGraph.scale;
-    const cellHeight = this.context.canvas.height / this.cartesianGraph.scale;
+    const cellWidth = width / this.cartesianGraph.scale;
+    const cellHeight = height / this.cartesianGraph.scale;
 
     bounds.min.x =
       Math.ceil(Math.abs(bounds.min.x) / cellWidth) *
@@ -145,14 +165,14 @@ class OperationManager {
     const numRows = (bounds.max.y - bounds.min.y) / cellHeight;
 
     const stitchingCanvas = document.createElement('canvas');
-    stitchingCanvas.width = this.context.canvas.width * numColumns;
-    stitchingCanvas.height = this.context.canvas.height * numRows;
+    stitchingCanvas.width = width * numColumns;
+    stitchingCanvas.height = height * numRows;
     const stitchingContext = stitchingCanvas.getContext('2d', { alpha: true });
 
     for (let y = 0; y < numRows; y++) {
       for (let x = 0; x < numColumns; x++) {
-        const cellCenterX = bounds.min.x + cellWidth / 2 + cellWidth * x;
-        const cellCenterY = bounds.min.y + cellHeight / 2 + cellHeight * y;
+        const cellCenterX = bounds.min.x + cellWidth * x + cellWidth / 2;
+        const cellCenterY = bounds.min.y + cellHeight * y + cellHeight / 2;
 
         this.cartesianGraph.offset.x = -cellCenterX;
         this.cartesianGraph.offset.y = -cellCenterY;
@@ -160,17 +180,29 @@ class OperationManager {
         this.render();
 
         // Each render will be stitched together.
-        const stitchX = x * this.context.canvas.width;
-        const stitchY = y * this.context.canvas.height;
+        const stitchX = x * width;
+        const stitchY = y * height;
 
-        const firstLayer = await loadImage(
-          this.cartesianGraph.context.canvas.toDataURL()
-        );
+        const firstLayer = await loadImage(firstCanvas.toDataURL());
         stitchingContext.drawImage(firstLayer, stitchX, stitchY);
-        const secondLayer = await loadImage(this.context.canvas.toDataURL());
+        const secondLayer = await loadImage(secondCanvas.toDataURL());
         stitchingContext.drawImage(secondLayer, stitchX, stitchY);
       }
     }
+
+    // Reset resolution.
+    firstCanvas.width = initial.width;
+    firstCanvas.height = initial.height;
+    this.cartesianGraph.context = firstCanvas.getContext('2d');
+    secondCanvas.width = initial.width;
+    secondCanvas.height = initial.height;
+    this.context = secondCanvas.getContext('2d');
+    this.cartesianGraph.scale = initial.scale;
+    this.cartesianGraph.markerLine = initial.markerLine;
+
+    // Render for the current resolution.
+    this.cartesianGraph.render();
+    this.render();
 
     return await getCanvasBlob(stitchingCanvas);
   }
