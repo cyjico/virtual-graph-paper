@@ -110,8 +110,16 @@ window.addEventListener('load', () => {
       operationManager.redoOperation();
     });
     buttons[2].addEventListener('click', () => {
-      operationManager.saveOperation(500, 500, 75.825).then((canvas) => {
-        canvas.toBlob((blob) => saveAs(blob, 'Graph Paper.png'));
+      operationManager.saveOperation().then((canvas) => {
+        const link = document.createElement('a');
+        link.setAttribute('download', 'GraphPaper.png');
+        link.setAttribute(
+          'href',
+          canvas
+            .toDataURL('image/png')
+            .replace('image/png', 'image/octet-stream')
+        );
+        link.click();
       });
     });
   }
