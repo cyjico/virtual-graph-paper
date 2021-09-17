@@ -110,8 +110,8 @@ window.addEventListener('load', () => {
       operationManager.redoOperation();
     });
     buttons[2].addEventListener('click', () => {
-      operationManager.saveOperation(720, 720, 50).then((blob) => {
-        saveAs(blob, 'Graph Paper.png');
+      operationManager.saveOperation(500, 500, 75.825).then((canvas) => {
+        canvas.toBlob((blob) => saveAs(blob, 'Graph Paper.png'));
       });
     });
   }
