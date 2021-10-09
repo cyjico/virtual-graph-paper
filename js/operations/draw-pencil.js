@@ -50,7 +50,7 @@ class DrawPencil extends Operation {
 
     if (
       dist >
-      0.5 * (this.cartesianGraph.baseScale / this.cartesianGraph.scale)
+      0.1 * (this.cartesianGraph.baseScale / this.cartesianGraph.scale)
     ) {
       if (!input.isWheelMouseDown) {
         this.vertices.push({
@@ -105,7 +105,7 @@ class DrawPencil extends Operation {
       this.cartesianGraph.scaleUpY(this.bounds.max.y) - minY + OFFSET_Y;
     const context = canvas.getContext('2d');
 
-    context.translate(-minX + OFFSET_HALF_X, -minY + OFFSET_HALF_Y);
+    context.translate(OFFSET_HALF_X - minX, OFFSET_HALF_Y - minY);
     this.renderVertices(context);
     this.cachedDrawing = new Image(canvas.width, canvas.height);
     this.cachedDrawing.src = canvas
