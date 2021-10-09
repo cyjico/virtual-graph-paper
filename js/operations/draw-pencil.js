@@ -18,8 +18,6 @@ class DrawPencil extends Operation {
     super(operationManager, cartesianGraph);
 
     this.vertices = [];
-    /** @type {null|number} */
-    this.cachedScale = null;
     /** @type {null|HTMLImageElement} */
     this.cachedDrawing = null;
 
@@ -34,6 +32,7 @@ class DrawPencil extends Operation {
       x: input.relativeCursorPosition.x,
       y: input.relativeCursorPosition.y,
     });
+    this.render();
   }
 
   onMousemove({ input }) {
@@ -108,7 +107,6 @@ class DrawPencil extends Operation {
 
     context.translate(-minX + OFFSET_HALF_X, -minY + OFFSET_HALF_Y);
     this.renderVertices(context);
-    this.cachedScale = this.cartesianGraph.scale;
     this.cachedDrawing = new Image(canvas.width, canvas.height);
     this.cachedDrawing.src = canvas
       .toDataURL('image/png')
@@ -119,40 +117,42 @@ class DrawPencil extends Operation {
 
   renderVertices(context) {
     if (this.vertices.length > 0) {
-      context.beginPath();
-      context.moveTo(
-        this.cartesianGraph.scaleUpX(this.vertices[0].x),
-        this.cartesianGraph.scaleUpY(this.vertices[0].y)
-      );
-
-      let i;
-      for (i = 1; i < this.vertices.length - 2; i++) {
-        const xc = (this.vertices[i].x + this.vertices[i + 1].x) / 2;
-        const yc = (this.vertices[i].y + this.vertices[i + 1].y) / 2;
-
-        context.quadraticCurveTo(
-          this.cartesianGraph.scaleUpX(this.vertices[i].x),
-          this.cartesianGraph.scaleUpY(this.vertices[i].y),
-          this.cartesianGraph.scaleUpX(xc),
-          this.cartesianGraph.scaleUpY(yc)
-        );
-      }
-
-      if (this.vertices.length > 3) {
-        context.quadraticCurveTo(
-          this.cartesianGraph.scaleUpX(this.vertices[i].x),
-          this.cartesianGraph.scaleUpY(this.vertices[i].y),
-          this.cartesianGraph.scaleUpX(this.vertices[i + 1].x),
-          this.cartesianGraph.scaleUpY(this.vertices[i + 1].y)
-        );
-      }
-
       context.save();
 
-      context.lineCap = 'round';
-      context.strokeStyle = this.foregroundColor;
-      context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
-      context.stroke();
+      if (this.vertices.length === 1) {
+        context.beginPath();
+        context.arc(
+          this.cartesianGraph.scaleUpX(this.vertices[0].x),
+          this.cartesianGraph.scaleUpY(this.vertices[0].y),
+          (this.strokeWidth * this.cartesianGraph.scale) / 2,
+          0,
+          2 * Math.PI
+        );
+        context.fill();
+      } else {
+        context.beginPath();
+        context.moveTo(
+          this.cartesianGraph.scaleUpX(this.vertices[0].x),
+          this.cartesianGraph.scaleUpY(this.vertices[0].y)
+        );
+        let i = 1;
+        for (; i < this.vertices.length - 1; i++) {
+          const xc = (this.vertices[i].x + this.vertices[i + 1].x) * 0.5;
+          const yc = (this.vertices[i].y + this.vertices[i + 1].y) * 0.5;
+
+          context.quadraticCurveTo(
+            this.cartesianGraph.scaleUpX(this.vertices[i].x),
+            this.cartesianGraph.scaleUpY(this.vertices[i].y),
+            this.cartesianGraph.scaleUpX(xc),
+            this.cartesianGraph.scaleUpY(yc)
+          );
+        }
+
+        context.lineCap = 'round';
+        context.strokeStyle = this.foregroundColor;
+        context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
+        context.stroke();
+      }
 
       context.restore();
     }
@@ -168,18 +168,16 @@ class DrawPencil extends Operation {
       const context = this.operationManager.context;
       const minX = this.cartesianGraph.scaleUpX(this.bounds.min.x);
       const minY = this.cartesianGraph.scaleUpY(this.bounds.min.y);
-      const scalar = this.cartesianGraph.scale / this.cachedScale;
 
+      context.imageSmoothingEnabled = false;
       context.drawImage(
         this.cachedDrawing,
-        minX - OFFSET_HALF_X * scalar,
-        minY - OFFSET_HALF_Y * scalar,
-        this.cartesianGraph.scaleUpX(this.bounds.max.x) -
-          minX +
-          OFFSET_X * scalar,
-        this.cartesianGraph.scaleUpY(this.bounds.max.y) -
-          minY +
-          OFFSET_Y * scalar
+        minX - OFFSET_HALF_X,
+        minY - OFFSET_HALF_Y,
+        Math.abs(minX - this.cartesianGraph.scaleUpX(this.bounds.max.x)) +
+          OFFSET_X,
+        Math.abs(minY - this.cartesianGraph.scaleUpY(this.bounds.max.y)) +
+          OFFSET_Y
       );
     }
   }
