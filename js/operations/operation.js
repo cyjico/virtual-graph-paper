@@ -36,6 +36,11 @@ class Operation {
 
   onKeyup() {}
 
+  /**
+   * Fired every time the camera moves or mouse moves; although, you can call it manually.
+   *
+   * @memberof Operation
+   */
   render() {}
 }
 

@@ -272,5 +272,6 @@ window.addEventListener('load', () => {
     { passive: true }
   );
 
+  // main()
   cartesianGraph.render();
 });
