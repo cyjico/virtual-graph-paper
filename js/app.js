@@ -213,7 +213,7 @@ window.addEventListener('load', () => {
 
     if (input.isWheelMouseDown) {
       cartesianGraph.offset.x -= (input.relativeCursorPosition.x - rx) * 0.5;
-      cartesianGraph.offset.y -= (input.relativeCursorPosition.y - ry) * 0.5;
+      cartesianGraph.offset.y += (input.relativeCursorPosition.y - ry) * 0.5;
       operationManager.render();
       cartesianGraph.render();
     }
@@ -226,7 +226,7 @@ window.addEventListener('load', () => {
       input.relativeCursorPosition.y = ry;
     }
 
-    statusBar.coordsElement.innerText = `X: ${rx.toFixed(2)} Y: ${-ry.toFixed(
+    statusBar.coordsElement.innerText = `X: ${rx.toFixed(2)} Y: ${ry.toFixed(
       2
     )}`;
 

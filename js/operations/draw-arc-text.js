@@ -31,11 +31,11 @@ class DrawArcText extends DrawArc {
     super.onMousemove.call(this, args, false);
 
     const rangeRad = this.convertToRange(this.endRad - this.startRad);
-    this.text = `  ${Math.round(rangeRad * (180 / Math.PI) * -100) / 100}°`;
+    this.text = `${Math.round(rangeRad * (180 / Math.PI) * -100) / 100}°`;
 
     const headingRad = this.convertToRange(this.startRad) + rangeRad / 2;
     this.textOffset.x = Math.cos(headingRad);
-    this.textOffset.y = Math.sin(headingRad);
+    this.textOffset.y = -Math.sin(headingRad);
 
     this.operationManager.render();
     this.render();
@@ -68,14 +68,14 @@ class DrawArcText extends DrawArc {
     const headingSin = Math.sin(headingRad);
 
     let scalar = 1.5;
-    if (this.text == '  -90°' || this.text == '  90°') {
+    if (this.text == '-90°' || this.text == '90°') {
       scalar = 1.75;
     }
 
     const xHeading =
       this.center.x + headingCos * this.radius * 10 * this.strokeWidth * scalar;
     const yHeading =
-      this.center.y + headingSin * this.radius * 10 * this.strokeWidth * scalar;
+      this.center.y - headingSin * this.radius * 10 * this.strokeWidth * scalar;
     const halfWidth = this.strokeWidth / 2;
 
     this.#setBounds(
@@ -107,8 +107,8 @@ class DrawArcText extends DrawArc {
     let scalar = 1.5;
 
     switch (this.text) {
-      case '  -90°':
-      case '  90°':
+      case '-90°':
+      case '90°':
         {
           context.beginPath();
           const radius = this.radius * this.cartesianGraph.scale;
@@ -128,7 +128,7 @@ class DrawArcText extends DrawArc {
 
           context.setTransform(1, 0, 0, 1, 0, 0);
 
-          scalar = 1.75;
+          scalar = 2;
         }
         break;
       default:
@@ -140,7 +140,7 @@ class DrawArcText extends DrawArc {
     context.textBaseline = 'middle';
     context.fillStyle = this.backgroundColor;
     context.font = `${
-      10 * this.cartesianGraph.scale * this.strokeWidth * 0.75
+      10 * this.cartesianGraph.scale * this.strokeWidth * 0.5
     }px sans-serif`;
     context.fillText(
       this.text,

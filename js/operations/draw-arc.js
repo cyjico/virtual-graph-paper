@@ -1,10 +1,6 @@
 import Operation from './operation.js';
 
-const RAD_CONSTANTS = [
-  90 * (Math.PI / 180),
-  180 * (Math.PI / 180),
-  270 * (Math.PI / 180),
-];
+const RAD_CONSTANTS = [Math.PI * 0.5, Math.PI, Math.PI * 1.5];
 
 const RAD_15 = 15 * (Math.PI / 180);
 
@@ -48,9 +44,10 @@ class DrawArc extends Operation {
     this.radius = Math.sqrt(x * x + y * y);
 
     if (env.isDegreeSnapping) {
-      this.endRad = Math.round(Math.atan2(y, x) / RAD_15) * RAD_15;
+      this.endRad =
+        Math.round((Math.atan2(x, y) - RAD_CONSTANTS[0]) / RAD_15) * RAD_15;
     } else {
-      this.endRad = Math.atan2(y, x);
+      this.endRad = Math.atan2(x, y) - RAD_CONSTANTS[0];
     }
 
     if (Math.abs(this.endRad - this.startRad) <= Number.EPSILON) {
@@ -100,7 +97,7 @@ class DrawArc extends Operation {
 
   onMouseup() {
     const rangeRad = this.convertToRange(this.endRad - this.startRad);
-    const halfWidth = this.strokeWidth / 2;
+    const halfSWidth = this.strokeWidth / 2;
 
     for (let i = 0; i < RAD_CONSTANTS.length; i++) {
       const sign = this.counterClockwise ? -1 : 1;
@@ -111,8 +108,8 @@ class DrawArc extends Operation {
         const sin = Math.sin(radConstant);
 
         this.#setBounds(
-          this.center.x + cos * this.radius + halfWidth * Math.sign(cos),
-          this.center.y + sin * this.radius + halfWidth * Math.sign(sin)
+          this.center.x + cos * this.radius + halfSWidth * Math.sign(cos),
+          this.center.y - (sin * this.radius + halfSWidth * Math.sign(sin))
         );
       }
     }
@@ -120,30 +117,30 @@ class DrawArc extends Operation {
     const startCos = Math.cos(this.startRad);
     const startSin = Math.sin(this.startRad);
     const xStart = this.center.x + startCos * this.radius;
-    const yStart = this.center.y + startSin * this.radius;
+    const yStart = this.center.y - startSin * this.radius;
 
     this.#setBounds(
-      xStart + halfWidth * Math.sign(startCos),
-      yStart + halfWidth * Math.sign(startSin)
+      xStart + halfSWidth * Math.sign(startCos),
+      yStart + halfSWidth * Math.sign(startSin)
     );
     this.#setBounds(
-      xStart - halfWidth * Math.sign(startCos),
-      yStart - halfWidth * Math.sign(startSin)
+      xStart - halfSWidth * Math.sign(startCos),
+      yStart - halfSWidth * Math.sign(startSin)
     );
 
     const endRad = this.startRad + rangeRad;
     const endCos = Math.cos(endRad);
     const endSin = Math.sin(endRad);
     const xEnd = this.center.x + endCos * this.radius;
-    const yEnd = this.center.y + endSin * this.radius;
+    const yEnd = this.center.y - endSin * this.radius;
 
     this.#setBounds(
-      xEnd + halfWidth * Math.sign(endCos),
-      yEnd + halfWidth * Math.sign(endSin)
+      xEnd + halfSWidth * Math.sign(endCos),
+      yEnd + halfSWidth * Math.sign(endSin)
     );
     this.#setBounds(
-      xEnd - halfWidth * Math.sign(endCos),
-      yEnd - halfWidth * Math.sign(endSin)
+      xEnd - halfSWidth * Math.sign(endCos),
+      yEnd - halfSWidth * Math.sign(endSin)
     );
   }
 
@@ -151,10 +148,11 @@ class DrawArc extends Operation {
     if (input.keys.length == 1) {
       switch (input.keys[0].toUpperCase()) {
         case 'Q':
-          this.startRad = Math.atan2(
-            input.relativeCursorPosition.y - this.center.y,
-            input.relativeCursorPosition.x - this.center.x
-          );
+          this.startRad =
+            Math.atan2(
+              input.relativeCursorPosition.x - this.center.x,
+              input.relativeCursorPosition.y - this.center.y
+            ) - RAD_CONSTANTS[0];
 
           if (env.isDegreeSnapping) {
             this.startRad = Math.round(this.startRad / RAD_15) * RAD_15;

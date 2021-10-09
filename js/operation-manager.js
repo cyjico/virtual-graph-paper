@@ -165,11 +165,12 @@ class OperationManager {
     for (let y = 0; y < NUM_ROWS; y++) {
       for (let x = 0; x < NUM_COLUMNS; x++) {
         const cellCenterX = bounds.min.x + cellWidthDS * x + cellWidthDS / 2;
-        const cellCenterY = bounds.min.y + cellHeightDS * y + cellHeightDS / 2;
+        const cellCenterY =
+          bounds.max.y - (cellHeightDS * y + cellHeightDS / 2);
 
         this.cartesianGraph.offset.x = -cellCenterX;
-        this.cartesianGraph.offset.y = -cellCenterY;
-        this.cartesianGraph.render();
+        this.cartesianGraph.offset.y = cellCenterY;
+        this.cartesianGraph.render(false);
         this.render();
 
         const stitchX = x * firstCanvas.width;
@@ -200,7 +201,7 @@ class OperationManager {
   }
 
   render() {
-    const viewportBounds = this.cartesianGraph.viewportBounds;
+    const vpBounds = this.cartesianGraph.viewportBounds;
 
     this.context.clearRect(
       0,
@@ -211,12 +212,11 @@ class OperationManager {
 
     for (let i = 0; i <= this.#operations.length - 1 - this.#travelIndex; i++) {
       const bounds = this.#operations[i].bounds;
-
       if (
-        bounds.min.x < viewportBounds.max.x &&
-        bounds.max.x > viewportBounds.min.x &&
-        bounds.min.y < viewportBounds.max.y &&
-        bounds.max.y > viewportBounds.min.y
+        vpBounds.max.x >= bounds.min.x &&
+        vpBounds.min.x <= bounds.max.x &&
+        vpBounds.max.y >= bounds.min.y &&
+        vpBounds.min.y <= bounds.max.y
       ) {
         this.#operations[i].render();
       }

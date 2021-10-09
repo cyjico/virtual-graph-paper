@@ -30,11 +30,11 @@ class CartesianGraph {
     return {
       min: {
         x: -halfWidth - this.offset.x,
-        y: -halfHeight - this.offset.y,
+        y: this.offset.y - halfHeight,
       },
       max: {
         x: halfWidth - this.offset.x,
-        y: halfHeight - this.offset.y,
+        y: this.offset.y + halfHeight,
       },
     };
   }
@@ -48,14 +48,38 @@ class CartesianGraph {
    * @param {number} x
    * @memberof CartesianGraph
    */
-  #drawVerticalLine(canvas, centerX, centerY, x) {
+  #drawVerticalLine(
+    canvas,
+    centerX,
+    centerY,
+    x,
+    viewportBounds,
+    isMarkerSticky
+  ) {
     const globalIndex = Math.round((x - centerX) / this.scale);
     if (
       globalIndex %
         Math.ceil((this.baseScale / this.scale) * this.markerLine) ==
       0
     ) {
-      this.context.fillText(globalIndex, x + 3, centerY - 3);
+      const maxX = viewportBounds.max.x - globalIndex - 1;
+      const minX = viewportBounds.min.x - globalIndex;
+      const maxY = viewportBounds.max.y - 1;
+      const minY = viewportBounds.min.y;
+
+      this.context.fillText(
+        globalIndex,
+        x +
+          3 +
+          ((minX >= 0) * minX + (maxX <= 0) * maxX) *
+            this.scale *
+            isMarkerSticky,
+        centerY -
+          3 -
+          ((minY >= 0) * minY + (maxY <= 0) * maxY) *
+            this.scale *
+            isMarkerSticky
+      );
       this.context.strokeStyle = 'hsl(0, 0%, 0%, 60%)';
     } else {
       this.context.strokeStyle = 'hsl(0, 0%, 0%, 20%)';
@@ -75,14 +99,38 @@ class CartesianGraph {
    * @param {number} y
    * @memberof CartesianGraph
    */
-  #drawHorizontalLine(canvas, centerX, centerY, y) {
+  #drawHorizontalLine(
+    canvas,
+    centerX,
+    centerY,
+    y,
+    viewportBounds,
+    isMarkerSticky
+  ) {
     const globalIndex = Math.round((centerY - y) / this.scale);
     if (
       globalIndex %
         Math.ceil((this.baseScale / this.scale) * this.markerLine) ==
       0
     ) {
-      this.context.fillText(globalIndex, centerX + 3, y - 3);
+      const maxY = viewportBounds.max.y - globalIndex - 1;
+      const minY = viewportBounds.min.y - globalIndex;
+      const maxX = viewportBounds.max.x - 1;
+      const minX = viewportBounds.min.x;
+
+      this.context.fillText(
+        globalIndex,
+        centerX +
+          3 +
+          ((minX >= 0) * minX + (maxX <= 0) * maxX) *
+            this.scale *
+            isMarkerSticky,
+        y -
+          3 -
+          ((minY >= 0) * minY + (maxY <= 0) * maxY) *
+            this.scale *
+            isMarkerSticky
+      );
       this.context.strokeStyle = 'hsl(0, 0%, 0%, 60%)';
     } else {
       this.context.strokeStyle = 'hsl(0, 0%, 0%, 20%)';
@@ -93,13 +141,14 @@ class CartesianGraph {
     this.context.stroke();
   }
 
-  render() {
+  render(isMarkerSticky = true) {
     const canvas = this.context.canvas;
 
     this.context.clearRect(0, 0, canvas.width, canvas.height);
 
     const centerX = canvas.width / 2 + this.offset.x * this.scale;
     const centerY = canvas.height / 2 + this.offset.y * this.scale;
+    const viewportBounds = this.viewportBounds;
 
     this.context.save();
 
@@ -131,12 +180,30 @@ class CartesianGraph {
       return this.scale;
     })();
 
-    for (let x = centerX + addendX; x < canvas.width; x += this.scale) {
-      this.#drawVerticalLine(canvas, centerX, centerY, x);
+    for (
+      let x = centerX + addendX;
+      x < canvas.width + this.scale;
+      x += this.scale
+    ) {
+      this.#drawVerticalLine(
+        canvas,
+        centerX,
+        centerY,
+        x,
+        viewportBounds,
+        isMarkerSticky
+      );
     }
 
-    for (let x = centerX - addendX; x > 0; x -= this.scale) {
-      this.#drawVerticalLine(canvas, centerX, centerY, x);
+    for (let x = centerX - addendX; x > -this.scale; x -= this.scale) {
+      this.#drawVerticalLine(
+        canvas,
+        centerX,
+        centerY,
+        x,
+        viewportBounds,
+        isMarkerSticky
+      );
     }
 
     const addendY = (() => {
@@ -152,12 +219,30 @@ class CartesianGraph {
       return this.scale;
     })();
 
-    for (let y = centerY + addendY; y < canvas.height; y += this.scale) {
-      this.#drawHorizontalLine(canvas, centerX, centerY, y);
+    for (
+      let y = centerY + addendY;
+      y < canvas.height + this.scale;
+      y += this.scale
+    ) {
+      this.#drawHorizontalLine(
+        canvas,
+        centerX,
+        centerY,
+        y,
+        viewportBounds,
+        isMarkerSticky
+      );
     }
 
-    for (let y = centerY - addendY; y > 0; y -= this.scale) {
-      this.#drawHorizontalLine(canvas, centerX, centerY, y);
+    for (let y = centerY - addendY; y > -this.scale; y -= this.scale) {
+      this.#drawHorizontalLine(
+        canvas,
+        centerX,
+        centerY,
+        y,
+        viewportBounds,
+        isMarkerSticky
+      );
     }
 
     this.context.restore();
@@ -182,7 +267,7 @@ class CartesianGraph {
    * @memberof CartesianGraph
    */
   scaleUpY(x) {
-    return (x + this.offset.y) * this.scale + this.context.canvas.height / 2;
+    return -((x - this.offset.y) * this.scale - this.context.canvas.height / 2);
   }
 
   /**
@@ -204,7 +289,7 @@ class CartesianGraph {
    * @memberof CartesianGraph
    */
   scaleDownY(x) {
-    return (x - this.context.canvas.height / 2) / this.scale - this.offset.y;
+    return (this.context.canvas.height / 2 - x) / this.scale + this.offset.y;
   }
 }
 

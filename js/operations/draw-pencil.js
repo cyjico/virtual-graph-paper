@@ -96,21 +96,25 @@ class DrawPencil extends Operation {
     this.bounds.max.y += strokeWidth;
 
     const canvas = document.createElement('canvas');
-    const minX = this.cartesianGraph.scaleUpX(this.bounds.min.x);
-    const minY = this.cartesianGraph.scaleUpY(this.bounds.min.y);
 
     canvas.width =
-      this.cartesianGraph.scaleUpX(this.bounds.max.x) - minX + OFFSET_X;
+      (this.bounds.max.x - this.bounds.min.x) * this.cartesianGraph.scale +
+      OFFSET_X;
     canvas.height =
-      this.cartesianGraph.scaleUpY(this.bounds.max.y) - minY + OFFSET_Y;
+      (this.bounds.max.y - this.bounds.min.y) * this.cartesianGraph.scale +
+      OFFSET_Y;
     const context = canvas.getContext('2d');
 
-    context.translate(OFFSET_HALF_X - minX, OFFSET_HALF_Y - minY);
+    context.translate(
+      OFFSET_HALF_X - this.cartesianGraph.scaleUpX(this.bounds.min.x),
+      OFFSET_HALF_Y - this.cartesianGraph.scaleUpY(this.bounds.max.y)
+    );
     this.renderVertices(context);
     this.cachedDrawing = new Image(canvas.width, canvas.height);
     this.cachedDrawing.src = canvas
       .toDataURL('image/png')
       .replace('image/png', 'image/octet-stream');
+    console.log(this.cachedDrawing.src);
 
     this.vertices = [];
   }
@@ -167,16 +171,16 @@ class DrawPencil extends Operation {
     ) {
       const context = this.operationManager.context;
       const minX = this.cartesianGraph.scaleUpX(this.bounds.min.x);
-      const minY = this.cartesianGraph.scaleUpY(this.bounds.min.y);
+      const maxY = this.cartesianGraph.scaleUpY(this.bounds.max.y);
 
       context.imageSmoothingEnabled = false;
       context.drawImage(
         this.cachedDrawing,
         minX - OFFSET_HALF_X,
-        minY - OFFSET_HALF_Y,
+        maxY - OFFSET_HALF_Y,
         Math.abs(minX - this.cartesianGraph.scaleUpX(this.bounds.max.x)) +
           OFFSET_X,
-        Math.abs(minY - this.cartesianGraph.scaleUpY(this.bounds.max.y)) +
+        Math.abs(maxY - this.cartesianGraph.scaleUpY(this.bounds.min.y)) +
           OFFSET_Y
       );
     }
