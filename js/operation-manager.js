@@ -50,6 +50,10 @@ class OperationManager {
     this.cartesianGraph = cartesianGraph;
   }
 
+  get operationLength() {
+    return this.#operations.length;
+  }
+
   /**
    *
    * @param {import('./operations/operation.js').default} operation
