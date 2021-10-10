@@ -1,8 +1,8 @@
 import Operation from './operation.js';
 
 // Offset for taking account the anti-aliasing in caching images.
-const OFFSET_X = 5;
-const OFFSET_Y = 5;
+const OFFSET_X = 2;
+const OFFSET_Y = 2;
 const OFFSET_HALF_X = OFFSET_X / 2;
 const OFFSET_HALF_Y = OFFSET_Y / 2;
 
@@ -96,6 +96,8 @@ class DrawPencil extends Operation {
     this.bounds.max.y += strokeWidth;
 
     const canvas = document.createElement('canvas');
+    const viewScale = this.cartesianGraph.scale;
+    this.cartesianGraph.scale = this.cartesianGraph.baseScale;
 
     canvas.width =
       (this.bounds.max.x - this.bounds.min.x) * this.cartesianGraph.scale +
@@ -110,78 +112,78 @@ class DrawPencil extends Operation {
       OFFSET_HALF_Y - this.cartesianGraph.scaleUpY(this.bounds.max.y)
     );
     this.renderVertices(context);
+    this.cartesianGraph.scale = viewScale;
     this.cachedDrawing = new Image(canvas.width, canvas.height);
-    this.cachedDrawing.src = canvas
-      .toDataURL('image/png')
-      .replace('image/png', 'image/octet-stream');
-    console.log(this.cachedDrawing.src);
-
-    this.vertices = [];
+    this.cachedDrawing.src = canvas.toDataURL('image/png');
+    delete this.vertices;
   }
 
   renderVertices(context) {
-    if (this.vertices.length > 0) {
-      context.save();
+    if (this.vertices.length <= 0) return;
 
-      if (this.vertices.length === 1) {
-        context.beginPath();
-        context.arc(
-          this.cartesianGraph.scaleUpX(this.vertices[0].x),
-          this.cartesianGraph.scaleUpY(this.vertices[0].y),
-          (this.strokeWidth * this.cartesianGraph.scale) / 2,
-          0,
-          2 * Math.PI
+    context.save();
+    context.beginPath();
+
+    if (this.vertices.length > 1) {
+      context.moveTo(
+        this.cartesianGraph.scaleUpX(this.vertices[0].x),
+        this.cartesianGraph.scaleUpY(this.vertices[0].y)
+      );
+
+      let i = 1;
+      for (; i < this.vertices.length - 1; i++) {
+        const xc = (this.vertices[i].x + this.vertices[i + 1].x) * 0.5;
+        const yc = (this.vertices[i].y + this.vertices[i + 1].y) * 0.5;
+
+        context.quadraticCurveTo(
+          this.cartesianGraph.scaleUpX(this.vertices[i].x),
+          this.cartesianGraph.scaleUpY(this.vertices[i].y),
+          this.cartesianGraph.scaleUpX(xc),
+          this.cartesianGraph.scaleUpY(yc)
         );
-        context.fill();
-      } else {
-        context.beginPath();
-        context.moveTo(
-          this.cartesianGraph.scaleUpX(this.vertices[0].x),
-          this.cartesianGraph.scaleUpY(this.vertices[0].y)
-        );
-        let i = 1;
-        for (; i < this.vertices.length - 1; i++) {
-          const xc = (this.vertices[i].x + this.vertices[i + 1].x) * 0.5;
-          const yc = (this.vertices[i].y + this.vertices[i + 1].y) * 0.5;
-
-          context.quadraticCurveTo(
-            this.cartesianGraph.scaleUpX(this.vertices[i].x),
-            this.cartesianGraph.scaleUpY(this.vertices[i].y),
-            this.cartesianGraph.scaleUpX(xc),
-            this.cartesianGraph.scaleUpY(yc)
-          );
-        }
-
-        context.lineCap = 'round';
-        context.strokeStyle = this.foregroundColor;
-        context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
-        context.stroke();
       }
 
-      context.restore();
+      context.lineCap = 'round';
+      context.strokeStyle = this.foregroundColor;
+      context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
+      context.stroke();
+    } else {
+      context.arc(
+        this.cartesianGraph.scaleUpX(this.vertices[0].x),
+        this.cartesianGraph.scaleUpY(this.vertices[0].y),
+        (this.strokeWidth * this.cartesianGraph.scale) / 2,
+        0,
+        2 * Math.PI
+      );
+
+      context.fill();
     }
+
+    context.restore();
   }
 
   render() {
-    if (this.vertices.length > 0) {
+    if (this.vertices) {
       this.renderVertices(this.operationManager.context);
     } else if (
       this.cachedDrawing.complete &&
       this.cachedDrawing.src.length > 0
     ) {
-      const context = this.operationManager.context;
       const minX = this.cartesianGraph.scaleUpX(this.bounds.min.x);
       const maxY = this.cartesianGraph.scaleUpY(this.bounds.max.y);
+      const multi = this.cartesianGraph.scale / this.cartesianGraph.baseScale;
 
-      context.imageSmoothingEnabled = false;
-      context.drawImage(
+      this.operationManager.context.imageSmoothingEnabled = false;
+      this.operationManager.context.drawImage(
         this.cachedDrawing,
-        minX - OFFSET_HALF_X,
-        maxY - OFFSET_HALF_Y,
-        Math.abs(minX - this.cartesianGraph.scaleUpX(this.bounds.max.x)) +
-          OFFSET_X,
-        Math.abs(maxY - this.cartesianGraph.scaleUpY(this.bounds.min.y)) +
-          OFFSET_Y
+        minX - OFFSET_HALF_X * multi,
+        maxY - OFFSET_HALF_Y * multi,
+        this.cartesianGraph.scaleUpX(this.bounds.max.x) -
+          minX +
+          OFFSET_X * multi,
+        this.cartesianGraph.scaleUpY(this.bounds.min.y) -
+          maxY +
+          OFFSET_Y * multi
       );
     }
   }
