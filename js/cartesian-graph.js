@@ -62,20 +62,19 @@ class CartesianGraph {
         Math.ceil((this.baseScale / this.scale) * this.markerLine) ==
       0
     ) {
-      const maxX = viewportBounds.max.x - globalIndex - 1;
+      const maxX = viewportBounds.max.x - globalIndex;
       const minX = viewportBounds.min.x - globalIndex;
       const maxY = viewportBounds.max.y - 1;
       const minY = viewportBounds.min.y;
 
+      this.context.textAlign = maxX <= 0 ? 'right' : 'left';
       this.context.fillText(
         globalIndex,
         x +
-          3 +
           ((minX >= 0) * minX + (maxX <= 0) * maxX) *
             this.scale *
             isMarkerSticky,
         centerY -
-          3 -
           ((minY >= 0) * minY + (maxY <= 0) * maxY) *
             this.scale *
             isMarkerSticky
@@ -115,18 +114,17 @@ class CartesianGraph {
     ) {
       const maxY = viewportBounds.max.y - globalIndex - 1;
       const minY = viewportBounds.min.y - globalIndex;
-      const maxX = viewportBounds.max.x - 1;
+      const maxX = viewportBounds.max.x;
       const minX = viewportBounds.min.x;
 
+      this.context.textAlign = maxX <= 0 ? 'right' : 'left';
       this.context.fillText(
         globalIndex,
         centerX +
-          3 +
           ((minX >= 0) * minX + (maxX <= 0) * maxX) *
             this.scale *
             isMarkerSticky,
         y -
-          3 -
           ((minY >= 0) * minY + (maxY <= 0) * maxY) *
             this.scale *
             isMarkerSticky
