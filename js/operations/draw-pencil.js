@@ -148,6 +148,8 @@ class DrawPencil extends Operation {
       context.lineWidth = this.strokeWidth * this.cartesianGraph.scale;
       context.stroke();
     } else {
+      context.fillStyle = this.foregroundColor;
+
       context.arc(
         this.cartesianGraph.scaleUpX(this.vertices[0].x),
         this.cartesianGraph.scaleUpY(this.vertices[0].y),
